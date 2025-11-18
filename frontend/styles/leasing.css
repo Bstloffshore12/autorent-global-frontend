@@ -1,0 +1,18 @@
+/* Rental Documents Content styles */
+.leasing-content {
+  h3 {
+    @apply mt-4 font-normal text-black;
+  }
+
+  h2 {
+    @apply text-3xl font-medium text-black;
+  }
+
+  p {
+    @apply mb-3;
+  }
+
+  span {
+    @apply ml-3;
+  }
+}

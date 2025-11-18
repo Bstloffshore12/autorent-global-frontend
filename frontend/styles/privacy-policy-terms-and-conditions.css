@@ -1,0 +1,27 @@
+/* Rental Documents Content styles */
+.privacy-policy-terms-and-conditions-content {
+  h2 {
+    @apply mb-2 text-2xl font-medium text-black;
+  }
+
+  h3 {
+    @apply mb-2 text-xl font-normal text-black;
+  }
+
+  h4 {
+    @apply mb-2 font-normal text-black;
+  }
+
+  ul {
+    @apply mb-4 space-y-1;
+
+    li {
+      @apply relative ml-5 pl-3 font-normal text-neutral-600;
+      @apply after:absolute after:left-0 after:top-3 after:size-1 after:rounded-full after:bg-neutral-700;
+    }
+  }
+
+  a {
+    @apply !font-medium !text-primary;
+  }
+}

@@ -1,0 +1,172 @@
+/* ===== BANNER SECTION STYLES ===== */
+
+/* Banner container */
+#headerSection {
+  position: relative;
+}
+
+/* media quries for adjuest next prev button vertical center */
+
+/* small screen */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .banner-swiper .swiper-button-prev,
+  .banner-swiper .swiper-button-next {
+    top: 65% !important;
+  }
+}
+
+/* medium screen */
+@media (min-width: 641px) and (max-width: 768px) {
+  .banner-swiper .swiper-button-prev,
+  .banner-swiper .swiper-button-next {
+    top: 75% !important;
+  }
+}
+/* 425 */
+@media (min-width: 375px) and (max-width: 425px) {
+  .banner-swiper .swiper-button-prev,
+  .banner-swiper .swiper-button-next {
+    display: none !important;
+  }
+  .banner-swiper {
+    margin-top: -41px !important;
+    height: 245px !important;
+  }
+}
+
+/* Banner pagination bullets */
+#headerSection .swiper-pagination {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+#headerSection .swiper-pagination .swiper-pagination-bullet {
+  background: white !important;
+  opacity: 0.7;
+}
+
+#headerSection .swiper-pagination .swiper-pagination-bullet-active {
+  background: white !important;
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  #headerSection .swiper-pagination {
+    bottom: 15px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  #headerSection .swiper-pagination {
+    bottom: 20px;
+  }
+}
+
+/* Banner swiper navigation buttons - HIGH SPECIFICITY */
+.banner-swiper .swiper-button-prev,
+.banner-swiper .swiper-button-next {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  color: #333 !important;
+  z-index: 10 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  transition: all 0.3s ease !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+.banner-swiper .swiper-button-prev {
+  left: 10px !important;
+  right: auto !important;
+}
+
+.banner-swiper .swiper-button-next {
+  right: 10px !important;
+  left: auto !important;
+}
+
+.banner-swiper .swiper-button-prev:hover,
+.banner-swiper .swiper-button-next:hover {
+  background-color: rgba(255, 255, 255, 1) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.banner-swiper .swiper-button-prev::after,
+.banner-swiper .swiper-button-next::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  content: '' !important;
+}
+
+.banner-swiper .swiper-button-prev::after {
+  content: '‹' !important;
+}
+
+.banner-swiper .swiper-button-next::after {
+  content: '›' !important;
+}
+
+/* Responsive banner navigation */
+@media (max-width: 640px) {
+  .banner-swiper .swiper-button-prev,
+  .banner-swiper .swiper-button-next {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .banner-swiper .swiper-button-prev {
+    left: 5px !important;
+  }
+
+  .banner-swiper .swiper-button-next {
+    right: 5px !important;
+  }
+
+  .banner-swiper .swiper-button-prev::after,
+  .banner-swiper .swiper-button-next::after {
+    font-size: 12px !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .banner-swiper .swiper-button-prev,
+  .banner-swiper .swiper-button-next {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .banner-swiper .swiper-button-prev::after,
+  .banner-swiper .swiper-button-next::after {
+    font-size: 14px !important;
+  }
+}
+
+/* Override any default swiper styles */
+.banner-swiper .swiper-button-prev,
+.banner-swiper .swiper-button-next {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  position: absolute !important;
+}
+
+/* Force override for any conflicting styles */
+html body .banner-swiper .swiper-button-prev,
+html body .banner-swiper .swiper-button-next {
+  top: 65% !important;
+  transform: translateY(-50%) !important;
+  position: absolute !important;
+}

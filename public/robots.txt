@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://autorent-me.com
+
+# Sitemaps
+Sitemap: https://autorent-me.com/sitemap.xml

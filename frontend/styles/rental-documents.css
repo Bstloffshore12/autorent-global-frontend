@@ -1,0 +1,15 @@
+/* Rental Documents Content styles */
+.rental-documents-content {
+  h3 {
+    @apply text-lg font-medium text-primary;
+  }
+
+  ul {
+    @apply grid gap-1;
+
+    li {
+      @apply ps-4 text-sm font-normal;
+      @apply after:absolute after:bottom-0 after:start-0 after:top-0 after:my-auto after:block after:h-3 after:w-[6px] after:rotate-45 after:border-b-2 after:border-r-2 after:border-primary;
+    }
+  }
+}

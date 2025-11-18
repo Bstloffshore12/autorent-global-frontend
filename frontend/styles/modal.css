@@ -1,0 +1,77 @@
+/* overlay */
+.react-aria-ModalOverlay[data-entering] {
+  animation: react-aria-ModalOverlay 350ms;
+}
+
+.react-aria-ModalOverlay[data-exiting] {
+  animation: react-aria-ModalOverlay 350ms reverse;
+  right: -8px;
+
+  @media (max-width: 768px) {
+    right: 0;
+  }
+}
+
+@keyframes react-aria-ModalOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* modal */
+
+.react-aria-Modal {
+  --origin: translateY(8px);
+}
+.react-aria-Modal[data-entering] {
+  animation: popup 350ms;
+}
+
+.react-aria-Modal[data-exiting] {
+  animation: popup 350ms reverse;
+}
+
+@keyframes popup {
+  0% {
+    transform: var(--origin) scale(70%);
+  }
+  70% {
+    transform: scale(102%);
+  }
+
+  100% {
+    transform: scale(100%);
+  }
+}
+
+/* Drawer */
+
+.is-drawer {
+  --origin: translateX(-100%);
+  transform-origin: 0;
+}
+.is-drawer[data-entering] {
+  animation: slide 350ms;
+}
+
+.is-drawer[data-exiting] {
+  animation: slide 350ms reverse;
+}
+
+@keyframes slide {
+  0% {
+    transform: var(--origin) scaleX(100%);
+  }
+
+  80% {
+    transform: scaleX(102%);
+  }
+
+  100% {
+    transform: translateX(0) scaleX(100%);
+  }
+}

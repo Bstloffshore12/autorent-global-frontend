@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* ===== GENERAL STYLES ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.primary');
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.secondary');
+}
+
+body {
+  position: relative;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  background-size: cover;
+  background-position: top center;
+  min-height: 100vh;
+
+  * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+body ::selection,
+html ::selection {
+  color: #303030;
+  background: #febe00;
+}
+
+* {
+  outline: none;
+}
+
+td {
+  padding: 0;
+}
+
+/* ===== IMPORTED STYLES ===== */
+@import url('../frontend/styles/banner.css');
+@import url('../frontend/styles/popover.css');
+@import url('../frontend/styles/modal.css');
+@import url('../frontend/styles/blog.css');
+@import url('../frontend/styles/cms.css');
+@import url('../frontend/styles/rental-documents.css');
+@import url('../frontend/styles/leasing.css');
+@import url('../frontend/styles/privacy-policy-terms-and-conditions.css');
+@import url('../frontend/styles/car-detail.css');
+@import url('../frontend/styles/about-transparency.css');
+@import url('../frontend/styles/progressAnimation.css');
+@import url('../frontend/styles/react-datetime.css');
+@import url('../frontend/styles/special-offer.css');
+
+/* ===== UTILITY STYLES ===== */
+.swiper-pagination.swiper-pagination-fraction.swiper-pagination-horizontal {
+  color: rgb(115 115 115 / var(--tw-text-opacity, 1));
+  position: static;
+}
+
+.Toastify {
+  z-index: 100;
+}
+
+.striped p:nth-child(even) {
+  @apply bg-primary-light;
+}
+
+.linear-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+#myAliceWebChat {
+  z-index: 1000;
+}

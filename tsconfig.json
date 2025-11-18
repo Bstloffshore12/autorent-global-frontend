@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      // "@/*": ["./*"],
+      "@/i18n/*": ["./i18n/*"],
+      "@/actions/*": ["./actions/*"],
+      "@/futils": ["./frontend/utils"],
+      "@/routes": ["./frontend/routes"],
+      "@/model/*": ["./backend/model/*"],
+      "@/icons/*": ["./frontend/icons/*"],
+      "@/hooks/*": ["./frontend/hooks/*"],
+      "@/store/*": ["./frontend/store/*"],
+      "@/query/*": ["./frontend/query/*"],
+      "@/sections/*": ["./frontend/sections/*"],
+      "@/sampleData/*": ["./backend/sampleData/*"],
+      "@/components/*": ["./frontend/components/*"],
+      "@/modal/*": ["./frontend/components/modal/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-sitemap.config.js"
+  ],
+  "exclude": ["node_modules"]
+}

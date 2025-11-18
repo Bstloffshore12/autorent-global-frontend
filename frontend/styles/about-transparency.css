@@ -1,0 +1,73 @@
+/* About Transparency Section styles */
+#AboutTransparencySection {
+  h1 {
+    font-size: 32px !important;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 28px !important;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 22px !important;
+    font-weight: 500;
+  }
+
+  h4 {
+    font-size: 20px !important;
+    font-weight: 400;
+  }
+
+  h5 {
+    font-size: 18px !important;
+    font-weight: 400;
+  }
+
+  h6 {
+    font-size: 16px !important;
+    font-weight: 400;
+  }
+
+  img {
+    @media (max-width: 576px) {
+      max-width: calc(100vw - 25px);
+    }
+  }
+
+  strong {
+    font-weight: inherit;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  ul {
+    margin-bottom: 16px;
+
+    li {
+      margin-top: 10px;
+      padding-left: 30px;
+
+      font-weight: 500;
+
+      &:after {
+        content: url('/assets/icons/tick-circle.svg');
+
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+    strong {
+      font-weight: 500;
+    }
+  }
+}
