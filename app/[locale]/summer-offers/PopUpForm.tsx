@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAppStore } from '@/store/provider'
 
-const PopupForm = () => {
+const PopupForm = ({ locale }: { locale: string }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
@@ -34,15 +34,17 @@ const PopupForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Create WhatsApp message with form data
-    const message = `*Summer Offers - New Lead*
+    // Build message parts conditionally — do not include city for bh locale
+    const cityLine =
+      locale === 'bh' || !formData.city ? '' : `*City:* ${formData.city}\n\n`
 
-*Name:* ${formData.username}
-*Email:* ${formData.email}
-*Phone:* ${formData.phone}
-*City:* ${formData.city}
-
-${text}`
+    const message =
+      `*Summer Offers - New Lead*\n\n` +
+      `*Name:* ${formData.username}\n` +
+      `*Email:* ${formData.email}\n` +
+      `*Phone:* ${formData.phone}\n` +
+      (cityLine ? cityLine : '') +
+      `${text}`
 
     // Encode the message for WhatsApp URL
     const encodedMessage = encodeURIComponent(message)
@@ -114,21 +116,23 @@ ${text}`
             />
           </div>
 
-          {/* City */}
-          <div>
-            <label htmlFor="city" className="mb-1 block font-medium">
-              City:
-            </label>
-            <input
-              type="text"
-              id="city"
-              value={formData.city}
-              onChange={(e) => handleInputChange('city', e.target.value)}
-              required
-              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Enter Your City"
-            />
-          </div>
+          {/* City (only show when locale !== 'bh') */}
+          {locale !== 'bh' && (
+            <div>
+              <label htmlFor="city" className="mb-1 block font-medium">
+                City:
+              </label>
+              <input
+                type="text"
+                id="city"
+                value={formData.city}
+                onChange={(e) => handleInputChange('city', e.target.value)}
+                required={locale !== 'bh'} // redundant since field hidden for 'bh', but kept for clarity
+                className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Enter Your City"
+              />
+            </div>
+          )}
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
             <button
