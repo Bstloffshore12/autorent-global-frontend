@@ -7,6 +7,7 @@
     "lint": "next lint",
     "build": "next build",
     "start": "next start -p 3005",
+    "start:staging": "next start -p 3007",
     "format": "npx prettier . --write",
     "check": "npm run format & npx tsc --noemit"
   },

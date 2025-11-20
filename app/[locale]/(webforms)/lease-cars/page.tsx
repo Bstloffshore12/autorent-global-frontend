@@ -61,15 +61,6 @@ const LeaseCarPage = async ({ params }: LocalePageProps) => {
                     title={leaseCarContent.media.title || leaseCarContent.title}
                   />
                 )}
-                {
-                  <Image
-                    width={1500}
-                    height={800}
-                    className="max-h-[800px] w-full rounded-2xl object-cover"
-                    src="https://autobackend.autorent-me.com/storage/web/uploads/2025/09/enjoy-reliable-mobility-with-flexible-rental-1920-650.jpg"
-                    alt=""
-                  />
-                }
 
                 <PersonalLeaseExplore />
               </div>
