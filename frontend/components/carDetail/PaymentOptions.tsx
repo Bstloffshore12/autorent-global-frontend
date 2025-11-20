@@ -61,9 +61,10 @@ const PaymentIcon = ({ method, type, name }: PaymentIconProps) => {
 
 type PaymentOptionsProps = {
   methods: PaymentMethod[]
+  total?: number
 }
 
-const PaymentOptions = ({ methods }: PaymentOptionsProps) => {
+const PaymentOptions = ({ methods, total }: PaymentOptionsProps) => {
   const [showModal, setShowModal] = useState(false)
   const {
     general: { currency, tax, pay_at_counter_percentage },
@@ -88,41 +89,57 @@ const PaymentOptions = ({ methods }: PaymentOptionsProps) => {
           aria-label="Payment Method"
           value={paymentMethod?.id.toString()}
         >
-          {methods.map(({ id, name, method, type, description }) => (
-            <div
-              key={id}
-              className={classnames(
-                'flex items-center justify-between gap-3 border-b',
-                paymentMethod?.id === id && 'bg-primary-light'
-              )}
-            >
-              <div className="p-2">
-                <Radio label={name} className="w-full" value={id.toString()} />
-                <p className="px-6 text-sm font-normal text-neutral-500">
-                  {description}
-                </p>
+          {methods.map(
+            ({ id, name, method, type, description, percentage }) => (
+              <div
+                key={id}
+                className={classnames(
+                  'flex items-center justify-between gap-3 border-b',
+                  paymentMethod?.id === id && 'bg-primary-light'
+                )}
+              >
+                <div className="p-2">
+                  <Radio
+                    label={name}
+                    className="w-full"
+                    value={id.toString()}
+                  />
+                  <p className="px-6 text-sm font-normal text-neutral-500">
+                    {description}
+                    {type === 'partial' &&
+                      paymentMethod?.id === id &&
+                      total &&
+                      percentage && (
+                        <span className="ml-2 font-semibold text-primary">
+                          {percentage}% (
+                          {((total * Number(percentage)) / 100).toFixed(2)} )
+                          AED
+                        </span>
+                      )}
+                  </p>
+                </div>
+                <PaymentIcon name={name} type={type} method={method} />
               </div>
-              <PaymentIcon name={name} type={type} method={method} />
-            </div>
-          ))}
+            )
+          )}
         </RadioGroup>
       </div>
       {showModal && (
-        <Modal isOpen={showModal}
-          setOpen={setShowModal}>
+        <Modal isOpen={showModal} setOpen={setShowModal}>
           <div
             onClick={(e) => e.stopPropagation()} // 🚫 Stop the click from closing the outer modal
           >
             <p className="text-sm text-neutral-700">
-              You’ve selected <strong>Pay at Counter</strong> – An additional {pay_at_counter_percentage}% fee applies to the rental amount.
+              You’ve selected <strong>Pay at Counter</strong> – An additional{' '}
+              {pay_at_counter_percentage}% fee applies to the rental amount.
             </p>
 
-            <div className="mt-4 flex justify-end gap-3" >
+            <div className="mt-4 flex justify-end gap-3">
               <button
                 onClick={() => setShowModal(false)}
                 className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium"
               >
-                Got it
+                Accept it
               </button>
             </div>
           </div>

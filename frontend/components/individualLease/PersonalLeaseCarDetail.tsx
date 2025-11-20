@@ -128,6 +128,12 @@ export function PersonalLeaseCarDetail({
   }, [carData.personal_lease_pricing, setLeaseType])
 
   useEffect(() => {
+    return () => {
+      setLeaseType('regular')
+    }
+  }, [])
+
+  useEffect(() => {
     const durationObj = currentYear?.durations.find(
       (d) => d.duration_id === selectedDuration
     )

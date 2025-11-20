@@ -95,6 +95,12 @@ export default function MonthlyLeaseCarDetail({
   }, [setLeaseType])
 
   useEffect(() => {
+    return () => {
+      setLeaseType('regular')
+    }
+  }, [])
+
+  useEffect(() => {
     const durationObj = currentYear?.durations.find(
       (d) => d.duration_id === selectedDuration
     )
@@ -346,7 +352,7 @@ export default function MonthlyLeaseCarDetail({
                   </div>
                 </div>
 
-                <div className="mb-4 border-b border-gray-200 pb-2">
+                {/* <div className="mb-4 border-b border-gray-200 pb-2">
                   <h3 className="mb-3 font-medium">Vehicle Model</h3>
                   <div className="flex flex-wrap gap-2">
                     {carData.monthly_pricing_data.map((year: any) => (
@@ -367,7 +373,7 @@ export default function MonthlyLeaseCarDetail({
                       </Button>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 <div className="mb-6 flex items-center justify-between">
                   <div className="flex items-baseline gap-1">

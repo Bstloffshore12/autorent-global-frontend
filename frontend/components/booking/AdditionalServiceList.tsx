@@ -40,8 +40,7 @@ const AdditionalServiceList = async ({
                   <p className="text-sm">{addOn.description}</p>
                 </div>
                 <p className="text-right font-normal">
-                  {addOn.price}{' '}
-                  {currency}
+                  {addOn.price} {currency}
                 </p>
               </div>
             </div>

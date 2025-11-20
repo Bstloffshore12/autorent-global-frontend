@@ -134,6 +134,7 @@ const {
   fetchCmsPageContent,
   fetchCmsSectionDetail,
   fetchCmsCustomContent,
+  fetchLeaseTermsPageContent,
 } = NetworkModel
 class CmsModel {
   static metaKeywords = ''
@@ -181,6 +182,12 @@ class CmsModel {
 
   static getTermsAndConditionsPageContent = () =>
     fetchCmsPageContent('terms-and-conditions')
+
+  static getMonthlyTermsAndConditionsPageContent = () =>
+    fetchLeaseTermsPageContent('monthly')
+
+  static getPersonalTermsAndConditionsPageContent = () =>
+    fetchLeaseTermsPageContent('personal')
 
   static getRentalGuideDetailPageContent = (slug: string) =>
     fetchCmsPageContent(slug as CmsSlugs)

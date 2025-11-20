@@ -17,9 +17,11 @@ import PopupForm from './PopUpForm'
 const LandingPageData = ({
   source,
   campaign,
+  locale,
 }: {
   source: string
   campaign: string
+  locale: string
 }) => {
   return (
     <>
@@ -28,7 +30,11 @@ const LandingPageData = ({
       <section>
         <div className="relative w-full shrink-0">
           <Image
-            src="/assets/images/summer-promotion.png"
+            src={
+              locale === 'ae'
+                ? '/assets/images/summer-promotion.png'
+                : 'https://autobackend.autorent-me.com/storage/web/uploads/2025/07/banner-02-3-2.jpg'
+            }
             alt="banners"
             width={1920}
             height={1080}
@@ -72,7 +78,7 @@ const LandingPageData = ({
         rows={2}
         leadMode
         enquiryLink="#contact"
-        heading="Explore More with Easy Car Rentals Across the UAE"
+        heading={`Explore More with Easy Car Rentals Across the ${locale === 'ae' ? 'UAE' : 'Bahrain'}`}
         subTitle="Choose from Our Extensive Fleet of Rental Cars"
       />
 
@@ -94,7 +100,9 @@ const LandingPageData = ({
             <div className="flex flex-col items-center rounded-xl bg-white p-6 text-center shadow-sm transition duration-300 hover:shadow-md">
               <BsGeoAltFill className="mb-4 text-4xl text-blue-600" />
               <p className="text-gray-700">
-                Multiple Locations – Dubai, Sharjah, Abu Dhabi & RAK
+                {locale === 'ae'
+                  ? 'Multiple Locations – Dubai, Sharjah, Abu Dhabi & RAK'
+                  : 'Locations – Bahrain'}
               </p>
             </div>
 
@@ -157,7 +165,8 @@ const LandingPageData = ({
         <div className="mb-10 text-center">
           <h2 className="mb-4 text-4xl font-bold text-gray-900">Autorent</h2>
           <p className="text-xl text-gray-700">
-            Trusted Car Rental & Lease Services in UAE
+            Trusted Car Rental & Lease Services in{' '}
+            {locale === 'ae' ? 'UAE' : 'Bahrain'}
           </p>
           <div className="mx-auto mt-4 h-1 w-32 rounded-full bg-blue-600"></div>
         </div>
@@ -172,7 +181,7 @@ const LandingPageData = ({
               ? <span className="font-semibold text-gray-900">Autorent</span>{' '}
               offers affordable and flexible options for{' '}
               <span className="font-semibold text-blue-700">
-                car rental UAE
+                car rental {locale === 'ae' ? 'UAE' : 'Bahrain'}
               </span>
               , including{' '}
               <span className="font-semibold text-blue-700">
@@ -190,23 +199,23 @@ const LandingPageData = ({
             <p>
               We specialize in{' '}
               <span className="font-semibold text-blue-700">
-                car lease Dubai
+                car lease {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>
               ,{' '}
               <span className="font-semibold text-blue-700">
-                car lease in Dubai
+                car lease in {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>
               , and{' '}
               <span className="font-semibold text-blue-700">
-                monthly car rental in Dubai
+                monthly car rental in {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>{' '}
               or{' '}
               <span className="font-semibold text-blue-700">
-                monthly car rental in Abu Dhabi
+                monthly car rental in {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>
               . Whether you want to{' '}
               <span className="font-semibold text-blue-700">
-                rent a car in Dubai
+                rent a car in {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>
               ,{' '}
               <span className="font-semibold text-blue-700">
@@ -214,7 +223,7 @@ const LandingPageData = ({
               </span>
               ,{' '}
               <span className="font-semibold text-blue-700">
-                rent a car in Abu Dhabi
+                rent a car in {locale === 'ae' ? 'Dubai' : 'Bahrain'}
               </span>
               , or{' '}
               <span className="font-semibold text-blue-700">
@@ -232,7 +241,7 @@ const LandingPageData = ({
               </span>
               ,{' '}
               <span className="font-semibold text-blue-700">
-                car rental in Sharjah
+                car rental in {locale === 'ae' ? 'Sharjah' : 'Bahrain'}
               </span>
               ,{' '}
               <span className="font-semibold text-blue-700">
@@ -240,7 +249,7 @@ const LandingPageData = ({
               </span>
               , and{' '}
               <span className="font-semibold text-blue-700">
-                car rental Abu Dhabi
+                car rental {locale === 'ae' ? 'Abu Dhabi' : 'Bahrain'}.
               </span>
               .
             </p>
@@ -250,7 +259,10 @@ const LandingPageData = ({
             <p className="text-xl font-bold">
               Book now with <span className="text-yellow-300">Autorent</span>{' '}
               and experience convenient and budget-friendly{' '}
-              <span className="text-yellow-300">car hire in the UAE</span>!
+              <span className="text-yellow-300">
+                car hire in the {locale === 'ae' ? 'UAE' : 'Bahrain'}
+              </span>
+              !
             </p>
           </div>
         </div>
@@ -267,7 +279,8 @@ const LandingPageData = ({
           <p className="mb-6 text-lg text-gray-600">
             Enjoy{' '}
             <span className="font-medium text-blue-600">flexible rentals</span>,
-            24/7 support, and unbeatable prices wherever you are in the UAE.
+            24/7 support, and unbeatable prices wherever you are in the{' '}
+            {locale === 'ae' ? 'UAE' : 'Bahrain'}.
           </p>
           <p className="text-xl font-semibold italic text-gray-800">
             Autorent Car Rental –{' '}

@@ -72,6 +72,14 @@ const benefits = [
     desc: '24/7 customer care support available anytime.',
   },
 ]
+const gradients = [
+  'from-blue-600 via-purple-500 to-red-500',
+  'from-cyan-500 via-blue-500 to-indigo-600',
+  'from-pink-500 via-rose-500 to-red-500',
+  'from-emerald-500 via-teal-500 to-cyan-500',
+  'from-orange-500 via-amber-500 to-yellow-500',
+  'from-slate-600 via-slate-500 to-slate-400',
+]
 
 export default function PersonalLeaseExplore() {
   return (
@@ -125,9 +133,12 @@ export default function PersonalLeaseExplore() {
                 key={idx}
                 className="duration-400 group flex flex-col items-start rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg transition-all ease-in-out hover:scale-105 hover:shadow-2xl"
               >
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-2xl text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                <div
+                  className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${gradients[idx % gradients.length]} text-2xl text-white shadow-md`}
+                >
                   {item.icon}
                 </div>
+
                 <h3 className="mb-2 text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-primary">
                   {item.title}
                 </h3>

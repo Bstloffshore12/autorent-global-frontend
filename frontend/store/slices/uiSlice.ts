@@ -9,7 +9,10 @@ export interface NavLinks {
 }
 
 const navLinks: NavLinks = {
-  Individual: [{ link: routes.listing, text: 'Rental' }],
+  Individual: [
+    { link: routes.listing, text: 'Rental' },
+    { link: routes.monthlyLeaseCars, text: 'Monthly Rental' },
+  ],
   Lease: [
     { link: routes.webform.leaseCars, text: 'Individual Lease' },
     { link: routes.webform.corporateLeasing, text: 'Corporate Lease' },

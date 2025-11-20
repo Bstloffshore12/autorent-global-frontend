@@ -81,7 +81,11 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
       <div className="grid gap-6 lg:grid-cols-[auto_360px]">
         <div className="space-y-6">
           {/* Rental Details */}
-          <RentalDetails order={bookingData.order} leaseDetails={bookingData.lease_details} className="space-y-2" />
+          <RentalDetails
+            order={bookingData.order}
+            leaseDetails={bookingData.lease_details}
+            className="space-y-2"
+          />
 
           <BookingDetailPaymentSummary
             className="block lg:hidden"
@@ -130,7 +134,10 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
                   make={bookingData.car.make}
                   door={bookingData.car.door}
                   seat={bookingData.car.seat}
-                  year={bookingData.lease_details?.year_title || bookingData.car.year}
+                  year={
+                    bookingData.lease_details?.year_title ||
+                    bookingData.car.year
+                  }
                   color={bookingData.car.color}
                   model={bookingData.car.model}
                   warranty={bookingData.car.warranty}

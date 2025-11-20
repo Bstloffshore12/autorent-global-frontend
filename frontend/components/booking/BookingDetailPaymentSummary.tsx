@@ -101,8 +101,7 @@ const BookingDetailPaymentSummary = ({
             >
               <span>{addOn.title}</span>
               <span>
-                {addOn.price}{' '}
-                {order.currency}
+                {addOn.price} {order.currency}
               </span>
             </p>
           ))}

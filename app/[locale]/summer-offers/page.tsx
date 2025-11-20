@@ -24,7 +24,9 @@ interface LocaleLayoutProps {
 
 const LandingPage = async ({ params, searchParams }: LocaleLayoutProps) => {
   const { locale } = await params
-  if (locale !== 'ae') return notFound()
+  if (!['ae', 'bh'].includes(locale)) {
+    return notFound()
+  }
 
   const { utm_campaign: campaign, utm_source: source } = await searchParams
   return (
@@ -32,6 +34,7 @@ const LandingPage = async ({ params, searchParams }: LocaleLayoutProps) => {
       <LandingPageData
         campaign={campaign?.toString() || 'website'}
         source={source?.toString() || 'website'}
+        locale={locale}
       />
 
       {/* Google tag (gtag.js) */}

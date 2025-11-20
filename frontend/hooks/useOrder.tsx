@@ -48,32 +48,31 @@ const useOrder = () => {
       const selfPickup =
         selfPickupLocation && pickupLocationType === 'self'
           ? JSON.stringify({
-            placeId: selfPickupLocation.place_id || '',
-            formattedAddress: selfPickupLocation.formatted_address || '',
-            location: {
-              lat: selfPickupLocation.geometry?.location?.lat() || 0,
-              lng: selfPickupLocation.geometry?.location?.lat() || 0,
-            },
-          })
+              placeId: selfPickupLocation.place_id || '',
+              formattedAddress: selfPickupLocation.formatted_address || '',
+              location: {
+                lat: selfPickupLocation.geometry?.location?.lat() || 0,
+                lng: selfPickupLocation.geometry?.location?.lat() || 0,
+              },
+            })
           : ''
 
       const selfDropoff =
         selfDropoffLocation && dropoffLocationType === 'self'
           ? JSON.stringify({
-            placeId: selfDropoffLocation.place_id || '',
-            formattedAddress: selfDropoffLocation.formatted_address || '',
-            location: {
-              lat: selfDropoffLocation.geometry?.location?.lat() || 0,
-              lng: selfDropoffLocation.geometry?.location?.lat() || 0,
-            },
-          })
+              placeId: selfDropoffLocation.place_id || '',
+              formattedAddress: selfDropoffLocation.formatted_address || '',
+              location: {
+                lat: selfDropoffLocation.geometry?.location?.lat() || 0,
+                lng: selfDropoffLocation.geometry?.location?.lat() || 0,
+              },
+            })
           : ''
 
       const additionalIds = JSON.stringify(
         additionalServices.map(({ id }) => id.toString())
       )
       const isregular = leaseType === 'monthly' || leaseType === 'personal'
-
 
       return {
         rentalcar_id: carId,

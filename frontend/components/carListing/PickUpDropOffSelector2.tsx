@@ -50,7 +50,7 @@ const PickUpDropOffSelector = ({
       selfDropoffLocation,
       officePickupLocation,
       officeDropoffLocation,
-      leaseType
+      leaseType,
     },
   } = useAppStore((state) => state)
 
@@ -157,7 +157,7 @@ const PickUpDropOffSelector = ({
                 <InputField
                   isRequired
                   size="small"
-                  onChange={() => { }}
+                  onChange={() => {}}
                   placeholder={t('Delivery location')}
                   errorMessage={t('Please self select pickup location')}
                   inputClassName="mt-2 h-[40px] rounded-lg border border-primary px-2"
@@ -215,7 +215,7 @@ const PickUpDropOffSelector = ({
                 <InputField
                   isRequired
                   size="small"
-                  onChange={() => { }}
+                  onChange={() => {}}
                   placeholder={t('Collection location')}
                   errorMessage={t('Please select self drop off location')}
                   inputClassName="mt-2 h-[40px] rounded-lg border border-primary px-2"
@@ -245,10 +245,21 @@ const PickUpDropOffSelector = ({
           {['personal', 'monthly'].includes(leaseType ?? '') ? (
             // READ-ONLY DROP OFF DATE (disabled)
             <input
-              value={dropoffTime?.toDate()?.toLocaleString() ?? ''}
+              value={
+                dropoffTime
+                  ? dropoffTime.toDate().toLocaleString([], {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      // second: undefined ← IMPORTANT: DON'T INCLUDE THIS
+                    })
+                  : ''
+              }
               readOnly
               disabled
-              className="mt-2 h-[40px] w-full rounded-lg border border-neutral-300 bg-neutral-100 px-2 text-sm cursor-not-allowed"
+              className="mt-2 h-[40px] w-full cursor-not-allowed rounded-lg border border-neutral-300 bg-neutral-100 px-2 text-sm"
             />
           ) : (
             <Datetime
@@ -258,7 +269,8 @@ const PickUpDropOffSelector = ({
               timeConstraints={timeConstraints}
               className="cust-date-time-picker text-sm"
               isValidDate={(c) => c.isAfter(pickupTime?.toDate())}
-            />)}
+            />
+          )}
         </div>
       </div>
     </Form>

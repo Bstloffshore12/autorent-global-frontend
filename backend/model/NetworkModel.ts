@@ -31,6 +31,8 @@ export type CmsSlugs =
   | 'corporate-leasing'
   | 'road-side-assistance'
   | 'terms-and-conditions'
+  | 'monthly'
+  | 'personal'
 
 export type CmsSectionSlugs =
   | 'partners'
@@ -198,6 +200,10 @@ class NetworkModel {
 
   static fetchCmsPageContent = async (slug: CmsSlugs) => {
     const url = `${this.adminIp}api/cms/pagedetail/${slug}`
+    return this.fetch(url)
+  }
+  static fetchLeaseTermsPageContent = async (slug: CmsSlugs) => {
+    const url = `${this.adminIp}api/lease-terms/${slug}`
     return this.fetch(url)
   }
 

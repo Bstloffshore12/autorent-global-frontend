@@ -20,6 +20,7 @@ import Lenis from 'lenis'
 import { usePathname } from 'next/navigation'
 
 import type { PersonalLeaseCarData as CarData } from '@/model/PersonalLeaseModel'
+import EnquiryForm from './EnquiryForm'
 
 interface CarRentalListingProps {
   cars: CarData[]
@@ -812,14 +813,17 @@ export default function PersonalLeaseListing({ cars }: CarRentalListingProps) {
             </Card>
           ))
         ) : (
-          <div className="col-span-full py-20 text-center text-gray-500">
-            <FaCar className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-            <p className="text-lg font-medium">
-              No cars found matching your filters.
+          <div className="col-span-full pb-14 text-center text-gray-700">
+            <h3 className="mb-1 text-xl font-semibold">
+              No cars found matching your filters
+            </h3>
+            <p className="mb-8 text-sm text-gray-500">
+              Tell us what you're looking for — we’ll get back to you with
+              availability.
             </p>
-            <p className="text-sm text-gray-400">
-              Try adjusting your filters to see available cars.
-            </p>
+
+            {/* Enquiry Form */}
+            <EnquiryForm />
           </div>
         )}
       </div>

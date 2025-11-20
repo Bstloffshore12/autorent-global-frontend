@@ -292,12 +292,12 @@ const OrderModal = ({
                 {mode == 'fixed'
                   ? Number(addOn['daily'])
                   : calculateAdditionalServiceCost(
-                    addOn[pricingMode] || addOn.daily,
-                    pricingMode,
-                    duration,
-                    addOn.title,
-                    addOn.service_type,
-                  )}{' '}
+                      addOn[pricingMode] || addOn.daily,
+                      pricingMode,
+                      duration,
+                      addOn.title,
+                      addOn.service_type
+                    )}{' '}
                 {currency.abbreviation}
               </p>
             </p>
@@ -392,7 +392,10 @@ const OrderModal = ({
         </div>
 
         <div className="mt-2 space-y-1 rounded-lg bg-white p-2 font-normal shadow shadow-primary/10">
-          <PaymentOptions methods={paymentOptions} />
+          <PaymentOptions
+            methods={paymentOptions}
+            total={Number(price.total)}
+          />
 
           <Button
             size="small"
@@ -400,7 +403,7 @@ const OrderModal = ({
             className="mt-4 w-full"
             isPending={isSubmitting}
             isDisabled={isSubmitting || !isRentable}
-            onPress={isRentable ? onSubmit : () => { }}
+            onPress={isRentable ? onSubmit : () => {}}
           >
             {isSubmitting ? t('Submitting Your Order') : t('Place Order')}{' '}
             <BsArrowRight />

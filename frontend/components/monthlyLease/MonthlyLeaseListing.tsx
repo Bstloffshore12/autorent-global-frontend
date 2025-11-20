@@ -22,6 +22,7 @@ import { usePathname } from 'next/navigation'
 import { useAppStore } from '@/store/provider'
 
 import type { MonthlyLeaseCarData as CarData } from '@/model/MonthlyLeaseModel'
+import EnquiryForm from '../individualLease/EnquiryForm'
 
 interface CarRentalListingProps {
   cars: CarData[]
@@ -691,7 +692,7 @@ export default function MonthlyLeaseListing({ cars }: CarRentalListingProps) {
           dropdownKey="price"
           isMultiSelect={true}
         />
-        <FilterButton
+        {/* <FilterButton
           label="Model Year"
           selectedValues={selectedYears}
           options={filterData.years.map((year) => ({
@@ -702,7 +703,7 @@ export default function MonthlyLeaseListing({ cars }: CarRentalListingProps) {
           icon={FaChevronDown}
           dropdownKey="year"
           isMultiSelect={true}
-        />
+        /> */}
         <FilterButton
           label="Body Types"
           selectedValues={selectedBodyTypes}
@@ -821,14 +822,16 @@ export default function MonthlyLeaseListing({ cars }: CarRentalListingProps) {
             </Card>
           ))
         ) : (
-          <div className="col-span-full py-20 text-center text-gray-500">
-            <FaCar className="mx-auto mb-4 h-16 w-16 text-gray-400" />
+          <div className="col-span-full pb-20 text-center text-gray-500">
             <p className="text-lg font-medium">
               No cars found matching your filters.
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="mb-8 text-sm text-gray-400">
               Try adjusting your filters to see available cars.
             </p>
+
+            {/* Enquiry Form */}
+            <EnquiryForm />
           </div>
         )}
       </div>

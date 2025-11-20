@@ -132,13 +132,11 @@ const CarBarSearchForm2 = ({
   const handleSetPickupLocation = (selectedId: Key) => {
     const selectedLocation = locations.find(({ id }) => selectedId === id)
     setOfficePickupLocation(selectedLocation || null)
-
   }
 
   const handleSetDropoffLocation = (selectedId: Key) => {
     const selectedLocation = locations.find(({ id }) => selectedId === id)
     setOfficeDropoffLocation(selectedLocation || null)
-
   }
 
   const handleSetPickupTime = (value: string | moment.Moment) => {

@@ -2,17 +2,13 @@ import MonthlyLeaseListing from '@/components/monthlyLease/MonthlyLeaseListing'
 import { getMonthlyLeaseCarsAction } from '@/actions/car/getMonthlyLeaseCarAction'
 import type { MonthlyLeaseCarData as CarData } from '@/model/MonthlyLeaseModel' // ✅ import type
 import Breadcrumb from '@/components/common/Breadcrumb'
-import { getTranslations } from 'next-intl/server'
 import routes from '@/routes'
 import type { Metadata } from 'next'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations()
-
-  const title = `${t('Monthly Lease Cars')} | 'Affordable Car Leasing'}`
-  const description = t(
+  const title = `Monthly Lease Cars | Affordable Car Leasing`
+  const description =
     'Explore flexible and affordable monthly car leasing options with a variety of vehicles to choose from.'
-  )
 
   return {
     title,
@@ -20,10 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 export default async function PersonalLeaseListingPage() {
-  const [t, leaseCarsRes] = await Promise.all([
-    getTranslations(),
-    getMonthlyLeaseCarsAction(),
-  ])
+  const [leaseCarsRes] = await Promise.all([getMonthlyLeaseCarsAction()])
 
   const cars: CarData[] = leaseCarsRes.success
     ? leaseCarsRes.data.map((car) => ({
@@ -37,9 +30,7 @@ export default async function PersonalLeaseListingPage() {
   return (
     <main>
       <Breadcrumb
-        path={[
-          { name: t('Monthly Lease Cars'), link: routes.monthlyLeaseCars },
-        ]}
+        path={[{ name: 'Monthly Lease Cars', link: routes.monthlyLeaseCars }]}
       />
       <MonthlyLeaseListing cars={cars} />
     </main>

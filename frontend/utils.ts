@@ -36,19 +36,18 @@ interface getCompareDateProps {
 }
 
 export const compareDate = ({ starting, ending }: getCompareDateProps) => {
-  const diffInMs = ending.compare(starting);
-  const diffInMinutes = diffInMs / (1000 * 60);
-  const diffInDays = diffInMinutes / (60 * 24);
+  const diffInMs = ending.compare(starting)
+  const diffInMinutes = diffInMs / (1000 * 60)
+  const diffInDays = diffInMinutes / (60 * 24)
 
-  const fullDays = Math.floor(diffInDays);
-  const remainderMinutes = diffInMinutes - fullDays * 24 * 60;
+  const fullDays = Math.floor(diffInDays)
+  const remainderMinutes = diffInMinutes - fullDays * 24 * 60
 
   // ✅ Only count as another day if remainder > 0.5 minute (to avoid floating errors)
-  const totalDays = remainderMinutes > 0.5 ? fullDays + 1 : fullDays;
+  const totalDays = remainderMinutes > 0.5 ? fullDays + 1 : fullDays
 
-
-  return Math.max(1, totalDays);
-};
+  return Math.max(1, totalDays)
+}
 
 interface getPricingModeProps {
   pickupTime: ZonedDateTime
@@ -245,9 +244,9 @@ export const PricingCalculator = ({
   const taxAmount = getTaxAmount({ tax, price: subTotal })
   const payAtCounterAmount = pay_at_counter_percentage
     ? getPayAtCounterAmount({
-      price: subTotal + taxAmount,
-      payAtCounterPercentage: pay_at_counter_percentage,
-    })
+        price: subTotal + taxAmount,
+        payAtCounterPercentage: pay_at_counter_percentage,
+      })
     : 0
   price.taxAmount = taxAmount.toFixed(2)
   price.rental = rentalCost.toFixed(2)

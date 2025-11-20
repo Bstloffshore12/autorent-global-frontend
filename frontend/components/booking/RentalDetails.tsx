@@ -4,7 +4,6 @@ import { BiCalendar, BiMapPin, BiTachometer } from 'react-icons/bi'
 import { MdCategory } from 'react-icons/md'
 import { PiCarProfileBold } from 'react-icons/pi'
 
-
 import Card from '@/components/common/Card'
 import { formatDate, formatTime } from '@/futils'
 import { type BookingDetailData } from '@/model/UserModel'
@@ -15,7 +14,11 @@ interface RentalDetailsProps {
   leaseDetails?: BookingDetailData['lease_details']
 }
 
-const RentalDetails = async ({ order, className, leaseDetails }: RentalDetailsProps) => {
+const RentalDetails = async ({
+  order,
+  className,
+  leaseDetails,
+}: RentalDetailsProps) => {
   const t = await getTranslations()
 
   return (
@@ -56,19 +59,21 @@ const RentalDetails = async ({ order, className, leaseDetails }: RentalDetailsPr
         </div>
       </div>
 
-
-      {leaseDetails && (leaseDetails.type === 'personal' || leaseDetails.type === 'monthly') ? (
+      {leaseDetails &&
+      (leaseDetails.type === 'personal' || leaseDetails.type === 'monthly') ? (
         <>
           <div className="mt-4 flex items-center gap-2 rounded-lg bg-primary-light p-2">
             <MdAccessTime />
             <p className="text-sm">
-              <span className="font-medium">{t('Duration')}:</span> {leaseDetails.duration_title}{' '}
+              <span className="font-medium">{t('Duration')}:</span>{' '}
+              {leaseDetails.duration_title}{' '}
             </p>
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-lg bg-primary-light p-2">
             <BiTachometer />
             <p className="text-sm">
-              <span className="font-medium">Kilometre Allowance :</span> {leaseDetails.kilometer_title}{' '}
+              <span className="font-medium">Kilometre Allowance :</span>{' '}
+              {leaseDetails.kilometer_title}{' '}
             </p>
           </div>
           {/* Lease Type */}
@@ -89,14 +94,16 @@ const RentalDetails = async ({ order, className, leaseDetails }: RentalDetailsPr
             </p>
           </div> */}
         </>
-      ) :
+      ) : (
         <div className="mt-4 flex items-center gap-2 rounded-lg bg-primary-light p-2">
           <MdAccessTime />
           <p className="text-sm">
-            <span className="font-medium">{t('Duration')}:</span> {order.duration}{' '}
-            {order.duration === 1 ? 'day' : 'days'} ({order.pricemode})
+            <span className="font-medium">{t('Duration')}:</span>{' '}
+            {order.duration} {order.duration === 1 ? 'day' : 'days'} (
+            {order.pricemode})
           </p>
-        </div>}
+        </div>
+      )}
     </Card>
   )
 }
