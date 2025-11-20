@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3007",
+    "dev": "next dev -p 3005",
     "lint": "next lint",
     "build": "next build",
-    "start": "next start -p 3007",
+    "start": "next start -p 3005",
     "format": "npx prettier . --write",
     "check": "npm run format & npx tsc --noemit"
   },
