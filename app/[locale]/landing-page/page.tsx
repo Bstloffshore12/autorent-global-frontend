@@ -2,7 +2,7 @@ import { type ResolvedMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
 import CmsModel from '@/model/CmsModel'
-import LandingPageData from './PageData'
+import LandingPageData from '../summer-offers/PageData'
 import { type GetOperatingCountriesData } from '@/model/OperatingCountryModel'
 import NetworkModel from '@/model/NetworkModel'
 
@@ -24,7 +24,7 @@ interface LocaleLayoutProps {
 
 const LandingPage = async ({ params, searchParams }: LocaleLayoutProps) => {
   const { locale } = await params
-  if (!['ae'].includes(locale)) {
+  if (!['bh'].includes(locale)) {
     return notFound()
   }
 
