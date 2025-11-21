@@ -28,7 +28,7 @@ const Header = ({ children, isLoggedIn }: HeaderProps) => {
         className={classnames(
           pathname !== routes.home &&
             pathname !== '/summer-offers' &&
-            pathname !== '/landing-page' &&
+            pathname !== '/new-year-offer' &&
             'h-[72px] md:h-[89px]'
         )}
       />

@@ -28,7 +28,9 @@ const Template = async ({ children }: { children: React.ReactNode }) => {
 
   const currentUr = headerList.get('link') || headerList.get('referer') || ''
   const isPromotionPage =
-    currentUr.includes('/summer-offers') || currentUr.includes('/landing')
+    currentUr.includes('/summer-offers') ||
+    currentUr.includes('/landing') ||
+    currentUr.includes('/new-year-offer')
 
   if (activeCountry)
     return (

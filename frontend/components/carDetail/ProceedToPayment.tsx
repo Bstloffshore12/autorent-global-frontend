@@ -50,7 +50,7 @@ const ProceedToPayment = ({
 
   const {
     auth: { isLoggedIn },
-    order: { pricingMode },
+    order: { pricingMode, leaseType },
     user: { isVerified, userData },
     setAuth: { setIsAuthModalOpen },
     setOrder: { setCarId, setIsOrderModalOpen },
@@ -151,7 +151,13 @@ const ProceedToPayment = ({
               label={t('I accept the')}
             />
             <Link
-              href={routes.termsAndConditions}
+              href={
+                leaseType === 'monthly'
+                  ? routes.monthlyLeaseTermsAndConditions
+                  : leaseType === 'personal'
+                    ? routes.leaseCarTermsAndConditions
+                    : routes.termsAndConditions
+              }
               className="font-medium text-primary"
             >
               {t('Terms & Conditions')}.

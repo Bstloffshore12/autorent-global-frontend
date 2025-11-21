@@ -39,7 +39,9 @@ const PopupForm = ({ locale }: { locale: string }) => {
       locale === 'bh' || !formData.city ? '' : `*City:* ${formData.city}\n\n`
 
     const heading =
-      locale === 'bh' ? `*New Lead*\n\n` : `*Summer Offers - New Lead*\n\n`
+      locale === 'bh'
+        ? `*New Year Offer Lead*\n\n`
+        : `*Summer Offers - New Lead*\n\n`
 
     const message =
       heading +

@@ -7,6 +7,8 @@ const routes = {
   rentalGuides: '/rental-guides',
   privacyPolicy: '/privacy-policy',
   termsAndConditions: '/terms-and-conditions',
+  monthlyLeaseTermsAndConditions: '/monthly-lease-cars/terms-and-conditions',
+  leaseCarTermsAndConditions: '/lease-cars/terms-and-conditions',
   personalLeaseCars: '/lease-cars/car-listing',
   monthlyLeaseCars: '/monthly-lease-cars',
   monthlyLeaseCarDetail: (slug: string) => `/monthly-lease-cars/${slug}`,

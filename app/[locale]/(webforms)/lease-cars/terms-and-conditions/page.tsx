@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import Container from '@/components/common/Container'
 import Breadcrumb from '@/components/common/Breadcrumb'
 import PageHeading from '@/components/common/PageHeading'
-import getPersonalTermsContentAction from '@/actions/pages/getMonthlyTermsContentAction'
+import getPersonalTermsContentAction from '@/actions/pages/getPersonalTermsContentAction'
 import SectionHeading from '@/components/common/SectionHeading'
 
 const Page = async () => {
@@ -11,7 +11,6 @@ const Page = async () => {
     getTranslations(),
     getPersonalTermsContentAction(),
   ])
-  //   console.log(res, 'res in terms and conditions page')
 
   if (res.success && res.data) {
     const { data } = res

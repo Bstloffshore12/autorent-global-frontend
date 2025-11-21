@@ -22,7 +22,7 @@ const SupportWidgetsContainer = () => {
     }
   }, [locale])
 
-  if (pathname !== '/summer-offers')
+  if (!['/summer-offers', '/new-year-offer'].includes(pathname))
     return (
       <>
         <WhatsAppContact />
