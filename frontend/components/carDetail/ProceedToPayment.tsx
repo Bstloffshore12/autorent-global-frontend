@@ -78,6 +78,10 @@ const ProceedToPayment = ({
     isMonthlyPriceActive,
   })
 
+  const hasPaymentOptions = paymentOptions && paymentOptions.length > 0
+
+  const isBookable = isRentable && hasPaymentOptions
+
   const checkUser = () => {
     if (!isLoggedIn) {
       setIsAuthModalOpen(true)
@@ -101,7 +105,8 @@ const ProceedToPayment = ({
     setCarId(carId)
     const isValid = checkFormValidations() && checkUser()
 
-    if (isValid && dropoffLocation && pickupLocation) setIsOrderModalOpen(true)
+    if (isValid && hasPaymentOptions && dropoffLocation && pickupLocation)
+      setIsOrderModalOpen(true)
   }
 
   // Set the active pricing modes of specific car
@@ -127,6 +132,11 @@ const ProceedToPayment = ({
         isRentable={isRentable}
         paymentOptions={paymentOptions}
       />
+      {!hasPaymentOptions && (
+        <p className="mb-2 rounded bg-red-50 px-2 py-1 text-sm text-red-600">
+          {'No payment methods available for this car.'}
+        </p>
+      )}
 
       <div className="flex flex-wrap items-end">
         <form
@@ -136,18 +146,18 @@ const ProceedToPayment = ({
         >
           <Checkbox
             isRequired
-            isDisabled={!isRentable} // disable checkbox if the car is not rentable
+            isDisabled={!isBookable} // disable checkbox if the car is not rentable
             label={t('I have a valid Driving License')}
           />
           <Checkbox
             isRequired
-            isDisabled={!isRentable} // disable checkbox if the car is not rentable
+            isDisabled={!isBookable} // disable checkbox if the car is not rentable
             label={t("Driver's age is above 21 years")}
           />
           <span className="flex items-center gap-1">
             <Checkbox
               isRequired
-              isDisabled={!isRentable} // disable checkbox if the car is not rentable
+              isDisabled={!isBookable} // disable checkbox if the car is not rentable
               label={t('I accept the')}
             />
             <Link
@@ -170,8 +180,8 @@ const ProceedToPayment = ({
           size="small"
           theme="primary"
           className="ms-auto"
-          isDisabled={!isRentable}
-          onPress={isRentable ? onProceed : () => {}}
+          isDisabled={!isBookable}
+          onPress={isBookable ? onProceed : () => {}}
         >
           {t('Proceed to Payment')}
         </Button>
