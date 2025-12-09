@@ -1,6 +1,6 @@
 'use client'
 
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Datetime from 'react-datetime'
 import { IoSearch } from 'react-icons/io5'
 import { useTranslations } from 'next-intl'
@@ -20,7 +20,9 @@ import {
   classnames,
   compareDate,
   toZonedDateTime,
+  getCountryTimezone,
   getOfficeLocationsOptions,
+  zonedToLocalDate,
 } from '@/futils'
 import {
   OfficeLocationOption,
@@ -120,7 +122,10 @@ const CarBarSearchForm2 = ({
       officeDropoffLocation,
       officePickupLocation,
     },
+    operatingCountry: { activeId },
   } = useAppStore((state) => state)
+
+  const timezone = getCountryTimezone(activeId)
 
   const { timeConstraints, pickupTimeConstraints } = usePickUpDropOff()
 
@@ -140,10 +145,10 @@ const CarBarSearchForm2 = ({
   }
 
   const handleSetPickupTime = (value: string | moment.Moment) => {
-    const date = toZonedDateTime(value.toString())
+    const date = toZonedDateTime(value, timezone)
 
     if (date) {
-      const d = compareDate({ ending: date, starting: now('Etc/GMT-4') })
+      const d = compareDate({ ending: date, starting: now(timezone) })
       if (d >= 0) setPickupTime(date)
     }
 
@@ -154,7 +159,7 @@ const CarBarSearchForm2 = ({
   }
 
   const handleSetDropoffTime = (value: string | moment.Moment) => {
-    const date = toZonedDateTime(value.toString())
+    const date = toZonedDateTime(value, timezone)
 
     if (pickupTime && value && date) {
       const d = compareDate({ starting: pickupTime, ending: date })
@@ -238,11 +243,13 @@ const CarBarSearchForm2 = ({
         <div>
           <Label label={t('Pick Up time and date')} />
           <Datetime
-            value={pickupTime?.toDate()}
+            value={pickupTime ? zonedToLocalDate(pickupTime) : undefined}
             onChange={handleSetPickupTime}
             inputProps={{ required: true }}
             timeConstraints={pickupTimeConstraints}
-            isValidDate={(c) => c.isAfter(moment().subtract(1, 'day'))}
+            isValidDate={(c) =>
+              c.isAfter(moment.tz(timezone).subtract(1, 'day'))
+            }
             className="cust-date-time-picker strong-bordere z-20 text-sm"
           />
         </div>
@@ -263,7 +270,7 @@ const CarBarSearchForm2 = ({
         <div>
           <Label label={t('Drop off time and date')} />
           <Datetime
-            value={dropoffTime?.toDate()}
+            value={dropoffTime ? zonedToLocalDate(dropoffTime) : undefined}
             onChange={handleSetDropoffTime}
             inputProps={{ required: true }}
             timeConstraints={timeConstraints}

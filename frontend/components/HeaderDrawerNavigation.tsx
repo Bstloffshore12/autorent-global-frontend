@@ -26,6 +26,7 @@ const HeaderDrawerNavigation = ({
   const t = useTranslations()
 
   const {
+    operatingCountry: { activeId: CountryId },
     general: { contact },
     setUi: { setIsNavigationDrawerActive },
     ui: { navLinks, isNavigationDrawerActive },
@@ -53,22 +54,27 @@ const HeaderDrawerNavigation = ({
       </div>
 
       <nav className="mt-8 px-2">
-        {Object.keys(navLinks).map((key) => (
-          <Menu text={t(key)} key={key} appropriateHeight={128}>
-            <div className="grid gap-2 rounded bg-primary/5 p-4">
-              {navLinks[key].map(({ link, text }) => (
-                <Link
-                  key={text}
-                  href={link}
-                  onClick={closeModal}
-                  className="text-black duration-150 hover:text-primary"
-                >
-                  {t(text)}
-                </Link>
-              ))}
-            </div>
-          </Menu>
-        ))}
+        {Object.keys(navLinks).map((key) => {
+          const items =
+            key === 'Individual' && CountryId === 1
+              ? [
+                  ...navLinks[key],
+                  { link: routes.monthlyLeaseCars, text: 'Monthly Rental' },
+                ]
+              : navLinks[key]
+
+          return (
+            <Menu text={t(key)} key={key} appropriateHeight={128}>
+              <div className="grid gap-2 rounded bg-primary/5 p-4">
+                {items.map(({ link, text }) => (
+                  <Link key={text} href={link}>
+                    {t(text)}
+                  </Link>
+                ))}
+              </div>
+            </Menu>
+          )
+        })}
       </nav>
 
       <div className="m-4 space-y-3 border-t border-slate-200 pt-4">

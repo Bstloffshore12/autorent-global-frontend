@@ -132,6 +132,7 @@ class NetworkModel {
       requestCallACallback: `${this.adminIp}api/webform/request`,
       postRoadSideAssistance: `${this.adminIp}api/webform/roadside`,
       corporateLeasing: `${this.adminIp}api/webform/corporatelease`,
+      customerVehicleRequests: `${this.adminIp}api/customer-vehicle-requests`,
     },
 
     // user
@@ -266,7 +267,7 @@ class NetworkModel {
       //   res,
       //   response,
       // })
-      const success = res.status === 200
+      const success = res.status === 200 || res.status === 201
 
       return { ...response, success, status: res.status }
     } catch (error) {

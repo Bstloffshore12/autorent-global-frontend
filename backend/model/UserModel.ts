@@ -221,6 +221,17 @@ export type BookingDetailData = {
     kilometer_title: string
     kilometer_value: number
   }
+  extra_kilometer_options?: {
+    id: number
+    additional_id: string
+    title: string
+    description: string
+    service_type: string
+    type: string
+    daily: string
+    weekly: string
+    monthly: string | null
+  }[]
 }
 
 const {

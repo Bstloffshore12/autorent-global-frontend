@@ -1,3 +1,4 @@
+
 import Image from 'next/image'
 import { FiAlertTriangle } from 'react-icons/fi'
 import { getTranslations } from 'next-intl/server'
@@ -16,6 +17,9 @@ import FeaturesChips from '@/components/carDetail/FeaturesChips'
 import AdditionalServiceList from '@/components/booking/AdditionalServiceList'
 import CarAttributesSection2 from '@/components/carDetail/CarAttributesSection2'
 import BookingDetailPaymentSummary from '@/components/booking/BookingDetailPaymentSummary'
+// import BookingExtraKmsAndPayment from '@/components/booking/BookingExtraKmsAndPayment'
+import PaymentModel, { type PaymentMethod } from '@/model/PaymentModel'
+import BookingExtraKmsAndPayment from './BookingExtraKmsAndPayment'
 
 interface BookingDetailProps {
   bookingData: BookingDetailData
@@ -23,6 +27,9 @@ interface BookingDetailProps {
 
 const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
   const t = await getTranslations()
+  const paymentMethodsRes = await PaymentModel.getMethods()
+
+  const paymentMethods = paymentMethodsRes.data as PaymentMethod[]
 
   const basePrices = {
     daily: bookingData.car.dailysale || bookingData.car.daily,
@@ -173,6 +180,16 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
               </div>
             )}
           </Card>
+
+          <BookingExtraKmsAndPayment
+            carSlug={bookingData.car.slug}
+            currency={bookingData.order.currency}
+            pricingMode={bookingData.order.pricemode}
+            orderId={bookingData.order.order_id.toString()}
+            totalAmount={bookingData.order.total_amount}
+            extraKms={bookingData.extra_kilometer_options || []}
+            paymentMethods={paymentMethods}
+          />
         </div>
 
         <div className="sticky top-0 hidden h-max gap-6 lg:grid">

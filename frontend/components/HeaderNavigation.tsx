@@ -96,6 +96,7 @@ const HeaderNavigation = ({
   const { offset } = useTopOffset()
 
   const {
+    operatingCountry: { activeId: CountryId },
     ui: { navLinks },
     setAuth: { setIsLoggedIn },
     setUi: { setNavLinks, setIsNavigationDrawerActive },
@@ -171,7 +172,13 @@ const HeaderNavigation = ({
                   'min-w-28 rounded-b-lg border-t-2 border-t-primary',
                   offset > 100 ? '-mt-6 bg-white/90' : '-mt-3 bg-white'
                 )}
-                dialogs={navLinks[key].map(({ link, text }) => (
+                dialogs={(key === 'Individual' && CountryId === 1
+                  ? [
+                      ...navLinks[key],
+                      { link: routes.monthlyLeaseCars, text: 'Monthly Rental' },
+                    ]
+                  : navLinks[key]
+                ).map(({ link, text }) => (
                   <Link
                     prefetch
                     key={text}

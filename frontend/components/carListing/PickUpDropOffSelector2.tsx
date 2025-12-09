@@ -1,16 +1,19 @@
 'use client'
 
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Datetime from 'react-datetime'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { now } from '@internationalized/date'
 import { Form, type Key } from 'react-aria-components'
-
+import { fromDate } from '@internationalized/date'
 import {
   compareDate,
   toZonedDateTime,
+  getCountryTimezone,
   getOfficeLocationsDropdownOptions,
+  zonedToLocalDate,
+  formatZonedDateTime,
 } from '@/futils'
 import GroupedDropdown, {
   type GroupedOption,
@@ -52,7 +55,10 @@ const PickUpDropOffSelector = ({
       officeDropoffLocation,
       leaseType,
     },
+    operatingCountry: { activeId },
   } = useAppStore((state) => state)
+
+  const timezone = getCountryTimezone(activeId)
 
   const {
     timeConstraints,
@@ -94,10 +100,10 @@ const PickUpDropOffSelector = ({
   }
 
   const handleSetPickupTime = (value: string | moment.Moment) => {
-    const date = toZonedDateTime(value.toString())
+    const date = toZonedDateTime(value, timezone)
 
     if (date) {
-      const d = compareDate({ ending: date, starting: now('Etc/GMT-4') })
+      const d = compareDate({ ending: date, starting: now(timezone) })
       if (d >= 0) setPickupTime(date)
     }
 
@@ -108,7 +114,7 @@ const PickUpDropOffSelector = ({
   }
 
   const handleSetDropoffTime = (value: string | moment.Moment) => {
-    const date = toZonedDateTime(value.toString())
+    const date = toZonedDateTime(value, timezone)
 
     if (pickupTime && value && date) {
       const d = compareDate({ starting: pickupTime, ending: date })
@@ -186,7 +192,7 @@ const PickUpDropOffSelector = ({
           <Label label={t('Pick Up time and date')} />
 
           <Datetime
-            value={pickupTime?.toDate()}
+            value={pickupTime ? zonedToLocalDate(pickupTime) : undefined}
             onChange={handleSetPickupTime}
             inputProps={{ required: true }}
             timeConstraints={pickupTimeConstraints}
@@ -245,25 +251,14 @@ const PickUpDropOffSelector = ({
           {['personal', 'monthly'].includes(leaseType ?? '') ? (
             // READ-ONLY DROP OFF DATE (disabled)
             <input
-              value={
-                dropoffTime
-                  ? dropoffTime.toDate().toLocaleString([], {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      // second: undefined ← IMPORTANT: DON'T INCLUDE THIS
-                    })
-                  : ''
-              }
+              value={dropoffTime ? formatZonedDateTime(dropoffTime) : ''}
               readOnly
               disabled
               className="mt-2 h-[40px] w-full cursor-not-allowed rounded-lg border border-neutral-300 bg-neutral-100 px-2 text-sm"
             />
           ) : (
             <Datetime
-              value={dropoffTime?.toDate()}
+              value={dropoffTime ? zonedToLocalDate(dropoffTime) : undefined}
               onChange={handleSetDropoffTime}
               inputProps={{ required: true }}
               timeConstraints={timeConstraints}

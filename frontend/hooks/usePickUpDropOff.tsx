@@ -1,11 +1,11 @@
 'use state'
 
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { useEffect, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 
 import { useAppStore } from '@/store/provider'
-import { compareDate, getPricingMode } from '@/futils'
+import { compareDate, getPricingMode, getCountryTimezone } from '@/futils'
 import { OfficeLocationOption } from '@/model/CmsModel'
 import { type RentalAdditional } from '@/model/CarModel'
 
@@ -46,7 +46,10 @@ const usePickUpDropOff = (): {
     },
     car: { isDailyActive, isWeeklyActive, isMonthlyActive },
     setOrder: { setDuration, setDropoffTime, setPricingMode },
+    operatingCountry: { activeId },
   } = useAppStore((state) => state)
+
+  const timezone = getCountryTimezone(activeId)
 
   const [additionalServicesIds, setAdditionalServicesIds] = useState<
     RentalAdditional['additional_id'][]
@@ -60,16 +63,16 @@ const usePickUpDropOff = (): {
   const timeConstraints = { hours: { min: 8, max: 19, step: 1 } }
 
   const pickupTimeConstraints = moment(pickupTime?.toDate()).isAfter(
-    moment().add(1, 'day')
+    moment.tz(timezone).add(1, 'day')
   )
     ? timeConstraints
     : {
-        hours: {
-          min: new Date().getHours() + 1,
-          max: timeConstraints.hours.max,
-          step: timeConstraints.hours.step,
-        },
-      }
+      hours: {
+        min: moment.tz(timezone).hour() + 1,
+        max: timeConstraints.hours.max,
+        step: timeConstraints.hours.step,
+      },
+    }
 
   const incrementDropoffTime = () =>
     dropoffTime && setDropoffTime(dropoffTime.add({ days: 1 }))

@@ -1,7 +1,9 @@
 import { StateCreator } from 'zustand'
 
+import { now } from '@internationalized/date'
 import { type AppStore } from '@/store/index'
 import { type GetOperatingCountriesData } from '@/model/OperatingCountryModel'
+import { getCountryTimezone } from '@/futils'
 
 type OperatingCountryState = {
   operatingCountry: {
@@ -48,10 +50,22 @@ export const operatingCountrySlice: StateCreator<
         operatingCountry: { ...state.operatingCountry, list },
       })),
     setActiveId: (activeId) =>
-      set((state) => ({
-        ...state,
-        operatingCountry: { ...state.operatingCountry, activeId },
-      })),
+      set((state) => {
+        const timeZone = getCountryTimezone(activeId)
+
+        return {
+          ...state,
+          operatingCountry: {
+            ...state.operatingCountry,
+            activeId,
+          },
+          order: {
+            ...state.order,
+            pickupTime: now(timeZone).add({ hours: 1 }),
+            dropoffTime: now(timeZone).add({ days: 1, hours: 1 }),
+          },
+        }
+      }),
     setIsModalOpen: (isModalOpen) =>
       set((state) => ({
         ...state,

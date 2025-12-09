@@ -19,6 +19,16 @@ export type PostEnquiryProps = {
   dropoff_location?: string
 }
 
+export type PostCustomerEnquiryProps = {
+  name: string
+  email: string
+  phone: string
+  vehicle_name: string
+  message?: string
+  campaign?: string
+  source?: string
+}
+
 export type PostCarLeaseProps = {
   type: string
   city: string
@@ -110,6 +120,7 @@ const {
   corporateLeasing,
   requestCallACallback,
   postRoadSideAssistance,
+  customerVehicleRequests,
 } = NetworkModel.apiRoutes.webform
 
 class WebformModel {
@@ -155,6 +166,12 @@ class WebformModel {
 
   static postEnquiry = async (data: PostEnquiryProps) =>
     NetworkModel.fetch(postEnquiry, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+
+  static postCustomerEnquiry = async (data: PostCustomerEnquiryProps) =>
+    NetworkModel.fetch(customerVehicleRequests, {
       method: 'POST',
       body: JSON.stringify(data),
     })

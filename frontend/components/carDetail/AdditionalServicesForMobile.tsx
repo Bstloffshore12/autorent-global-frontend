@@ -8,10 +8,13 @@ import { useAppStore } from '@/store/provider'
 import { classnames, includeTax } from '@/futils'
 import Checkbox from '@/components/common/Checkbox'
 import { type RentalAdditional } from '@/model/CarModel'
+import { BsSpeedometer } from 'react-icons/bs'
+import DropoffChargeDisplay from '@/components/carDetail/DropOffChargeDisplay'
 
 type AdditionalServicesFormMobileProps = {
   className?: string
   rentalAdditional: RentalAdditional[]
+  summary?: string
 }
 
 type PriceChipProps = {
@@ -37,6 +40,7 @@ export const PriceChip = ({ price, isActive }: PriceChipProps) => {
 const AdditionalServicesFormMobile = ({
   className,
   rentalAdditional,
+  summary,
 }: AdditionalServicesFormMobileProps) => {
   const t = useTranslations()
 
@@ -112,6 +116,39 @@ const AdditionalServicesFormMobile = ({
     setAdditionalServices(SelectedAddOns)
   }
 
+  const extraKmServices = filteredRentalAdditional.filter(
+    (x) => x.service_type === 'extra_kilometer'
+  )
+
+  const otherServices = filteredRentalAdditional.filter(
+    (x) => x.service_type !== 'extra_kilometer'
+  )
+
+  const handleExtraKmSelect = (id: RentalAdditional['id']) => {
+    const extraKmIds = extraKmServices.map((s) => s.id)
+
+    // ⭐ If user clicks already selected option → unselect it
+    if (selectedExtraKmId === id) {
+      const newSelected = selectedIds.filter((sid) => !extraKmIds.includes(sid))
+      const SelectedAddOns = rentalAdditional.filter((x) =>
+        newSelected.includes(x.id)
+      )
+      setAdditionalServices(SelectedAddOns)
+      return
+    }
+
+    // ⭐ Normal selection (remove all + add selected)
+    const newSelected = [
+      ...selectedIds.filter((sid) => !extraKmIds.includes(sid)),
+      id,
+    ]
+
+    const SelectedAddOns = rentalAdditional.filter((x) =>
+      newSelected.includes(x.id)
+    )
+    setAdditionalServices(SelectedAddOns)
+  }
+
   useEffect(() => {
     // Auto-select only mandatory services (mandatory: 1)
     const mandatoryServices = filteredRentalAdditional.filter(
@@ -120,10 +157,14 @@ const AdditionalServicesFormMobile = ({
 
     setAdditionalServices(mandatoryServices)
   }, [filteredRentalAdditional, setAdditionalServices])
+  const selectedExtraKmId = useMemo(() => {
+    const extraKmIds = extraKmServices.map((s) => s.id)
+    return selectedIds.find((id) => extraKmIds.includes(id)) ?? null
+  }, [selectedIds, extraKmServices])
 
   return (
     <div className={className}>
-      {filteredRentalAdditional.map(
+      {otherServices.map(
         (
           {
             id,
@@ -189,6 +230,68 @@ const AdditionalServicesFormMobile = ({
           </Fragment>
         )
       )}
+      <DropoffChargeDisplay />
+      {summary && (
+        <p className="mt-2 flex items-center gap-2 rounded bg-primary-light px-2 py-1 text-sm font-normal text-primary">
+          <BsSpeedometer />
+          {summary}
+        </p>
+      )}
+      {/* EXTRA KM SECTION */}
+      <div className="mt-3">
+        <p className="col-span-2 font-semibold text-gray-900">
+          Extra Kilometers
+        </p>
+
+        <div className="mt-2 grid grid-cols-2 gap-3">
+          {extraKmServices.map((srv) => {
+            const isSelected = selectedExtraKmId === srv.id
+            const price =
+              pricingMode === 'daily'
+                ? srv.daily
+                : pricingMode === 'weekly'
+                  ? srv.weekly
+                  : srv.monthly
+
+            if (!price || Number(price) === 0) return null
+
+            return (
+              <div
+                key={srv.id}
+                onClick={() => handleExtraKmSelect(srv.id)}
+                className={classnames(
+                  'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
+                  isSelected
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-blue-200'
+                    : 'border-gray-300 bg-white hover:border-blue-300'
+                )}
+              >
+                {/* Left side: radio + title */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="extraKmOption"
+                    checked={isSelected}
+                    onChange={() => handleExtraKmSelect(srv.id)}
+                    className="h-4 w-4 cursor-pointer accent-blue-600"
+                  />
+                  <span className="font-medium">{srv.title}</span>
+                </div>
+
+                {/* Right side: price */}
+                <span
+                  className={classnames(
+                    'text-sm font-semibold',
+                    isSelected ? 'text-blue-700' : 'text-gray-800'
+                  )}
+                >
+                  {price}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

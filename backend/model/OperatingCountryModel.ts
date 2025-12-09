@@ -58,6 +58,7 @@ export type GetOperatingCountriesData = {
   daily_price_active: 0 | 1
   weekly_price_active: 0 | 1
   monthly_price_active: 0 | 1
+  extra_kilometer_service: 0 | 1
   iso2: 'ae' | 'sa' | 'bh' | 'om'
 }
 

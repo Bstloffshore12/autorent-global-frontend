@@ -24,19 +24,35 @@ const LinkButton = ({
   ariaLabel,
   className = '',
 }: LinkButtonProps) => {
+  const isAnchor = typeof href === 'string' && href.startsWith('#')
+  const commonClasses = classnames(
+    'flex min-w-max items-center justify-center gap-2 text-nowrap rounded-lg border px-6 shadow shadow-primary/20 duration-150',
+    'hover:shadow-md hover:shadow-primary/20 hover:brightness-110',
+    'active:!brightness-125',
+    getButtonThemeColor(theme),
+    getButtonSize(size),
+    className
+  )
+
+  if (isAnchor) {
+    return (
+      <a
+        href={href}
+        target={target}
+        aria-label={ariaLabel}
+        className={commonClasses}
+      >
+        {children}
+      </a>
+    )
+  }
+
   return (
     <Link
       href={href}
       target={target}
       aria-label={ariaLabel}
-      className={classnames(
-        'flex min-w-max items-center justify-center gap-2 text-nowrap rounded-lg border px-6 shadow shadow-primary/20 duration-150',
-        'hover:shadow-md hover:shadow-primary/20 hover:brightness-110',
-        'active:!brightness-125',
-        getButtonThemeColor(theme),
-        getButtonSize(size),
-        className
-      )}
+      className={commonClasses}
     >
       {children}
     </Link>

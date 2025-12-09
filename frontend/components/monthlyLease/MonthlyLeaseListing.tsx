@@ -760,7 +760,7 @@ export default function MonthlyLeaseListing({ cars }: CarRentalListingProps) {
 
               <CardContent className="px-4 py-0">
                 <h3 className="mb-1 text-lg font-bold text-gray-900">
-                  {car.make.toUpperCase()} {car.model.toUpperCase()}
+                  {car.title.toUpperCase()}
                 </h3>
 
                 <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">

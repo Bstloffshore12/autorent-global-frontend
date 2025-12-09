@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify'
 import { fromDate, type ZonedDateTime } from '@internationalized/date'
+import moment from 'moment-timezone'
 
 import {
   type OfficeLocationOption,
@@ -16,6 +17,7 @@ import { type MakeData, RentalAdditional } from '@/model/CarModel'
 import { type GetOperatingCountriesData } from '@/model/OperatingCountryModel'
 
 import { getAvailablePricingMode, checkIfRentable } from './utils/carUtils'
+import { time } from 'console'
 
 export { getAvailablePricingMode, checkIfRentable }
 
@@ -263,15 +265,58 @@ export const toastErrors = (errors: Errors) =>
     errors[key].forEach((err: string) => toast.error(err))
   )
 
+export const COUNTRY_TIMEZONES: Record<number, string> = {
+  1: 'Asia/Dubai', // UAE
+  2: 'Asia/Bahrain', // Bahrain
+  3: 'Asia/Muscat', // Oman
+  4: 'Asia/Riyadh', // Saudi Arabia
+}
+
+export const getCountryTimezone = (countryId: number): string => {
+  return COUNTRY_TIMEZONES[countryId] || 'Asia/Dubai'
+}
 export const dateToApiAcceptableFormat = (dateTime: ZonedDateTime) =>
   `${dateTime.year}-${String(dateTime.month).padStart(2, '0')}-${String(dateTime.day).padStart(2, '0')} ${String(dateTime.hour).padStart(2, '0')}:${String(dateTime.minute).padStart(2, '0')}`
 
-export const toZonedDateTime = (date: string) => {
+export const zonedToLocalDate = (zdt: ZonedDateTime) => {
+  const { year, month, day, hour, minute, second } = zdt
+
+  // Create a date in the BROWSER timezone but with SAME clock time
+  return new Date(year, month - 1, day, hour, minute, second)
+}
+
+export const formatZonedDateTime = (zdt: ZonedDateTime) => {
+  if (!zdt) return ''
+
+  const month = String(zdt.month).padStart(2, '0')
+  const day = String(zdt.day).padStart(2, '0')
+  const year = zdt.year
+
+  let hour = zdt.hour
+  const minute = String(zdt.minute).padStart(2, '0')
+
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  hour = hour % 12
+  hour = hour === 0 ? 12 : hour
+
+  const hourStr = String(hour).padStart(2, '0')
+
+  return `${month}-${day}-${year} ${hourStr}:${minute} ${ampm}`
+}
+
+export const toZonedDateTime = (
+  value: string | moment.Moment,
+  timezone: string = 'Asia/Dubai'
+) => {
   try {
-    return fromDate(new Date(date), 'Etc/GMT-4')
+    const jsDate = moment.isMoment(value)
+      ? value.tz(timezone, true).toDate() // interpret moment in timezone
+      : moment.tz(value, timezone).toDate() // interpret string in timezone
+
+    return fromDate(jsDate, timezone)
   } catch (error) {
     console.log({ error })
-    return fromDate(new Date(), 'Etc/GMT-4')
+    return fromDate(new Date(), timezone)
   }
 }
 

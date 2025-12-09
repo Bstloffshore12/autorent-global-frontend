@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { type ResolvedMetadata } from 'next'
-import { BsSpeedometer } from 'react-icons/bs'
 import { getTranslations } from 'next-intl/server'
 
 import routes from '@/routes'
@@ -25,7 +24,6 @@ import PickUpDropOffSelector2 from '@/components/carListing/PickUpDropOffSelecto
 import getOfficeLocationsDropdownAction from '@/actions/cms/getOfficeLocationsDropdownAction'
 import AdditionalServicesFormMobile from '@/components/carDetail/AdditionalServicesForMobile'
 import SetLeaseTypeClient from '@/components/individualLease/SetLeaseTypeClient'
-import DropoffChargeDisplay from '@/components/carDetail/DropOffChargeDisplay'
 
 // seo meta
 export async function generateMetadata(
@@ -210,15 +208,8 @@ const CarDetailPage = async ({ params }: CarDetailPageProps) => {
               <AdditionalServicesFormMobile
                 className="my-4"
                 rentalAdditional={rentalAdditional}
+                summary={summary}
               />
-              <DropoffChargeDisplay />
-
-              {summary && (
-                <p className="flex items-center gap-2 rounded bg-primary-light px-2 py-1 text-sm font-normal text-primary">
-                  <BsSpeedometer />
-                  {summary}
-                </p>
-              )}
 
               <Coupons
                 carId={id}

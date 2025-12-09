@@ -204,6 +204,7 @@ export type RentalAdditional = {
     | 'collection'
     | 'delivery'
     | 'no_deposit'
+    | 'extra_kilometer'
   default: 0 | 1
 }
 

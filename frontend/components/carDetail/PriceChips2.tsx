@@ -4,7 +4,13 @@ import { useTranslations } from 'next-intl'
 
 import { useAppStore } from '@/store/provider'
 import { type CarState } from '@/store/slices/carSlice'
-import { classnames, includeTax, toZonedDateTime } from '@/futils'
+import moment from 'moment-timezone'
+import {
+  classnames,
+  includeTax,
+  toZonedDateTime,
+  getCountryTimezone,
+} from '@/futils'
 
 type PriceProps = {
   price: string
@@ -32,7 +38,10 @@ const PriceChip = ({
       currency: { abbreviation },
     },
     setOrder: { setPickupTime, setDropoffTime },
+    operatingCountry: { activeId },
   } = useAppStore((state) => state)
+
+  const timezone = getCountryTimezone(activeId)
 
   const processedSale =
     tax.taxIncluded && sale ? includeTax({ tax, price: sale }).toFixed(2) : sale
@@ -46,12 +55,11 @@ const PriceChip = ({
     if (mode === 'weekly') daysToAdd = 7
     if (mode === 'monthly') daysToAdd = 30
 
-    const from = new Date()
-    const to = new Date()
-    to.setDate(from.getDate() + daysToAdd)
+    const from = moment.tz(timezone)
+    const to = moment.tz(timezone).add(daysToAdd, 'days')
 
-    setDropoffTime(toZonedDateTime(to.toString()))
-    setPickupTime(toZonedDateTime(from.toString()))
+    setDropoffTime(toZonedDateTime(to, timezone))
+    setPickupTime(toZonedDateTime(from, timezone))
   }
 
   return (

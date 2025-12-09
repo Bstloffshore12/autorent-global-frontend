@@ -5,12 +5,13 @@ import { useState, useEffect } from 'react'
 import { classnames } from '@/futils'
 import { useAppStore } from '@/store/provider'
 import LoadingSpinner from '@/icons/LoadingSpinner'
+import customerVehicleRequestAction from '@/actions/webforms/customerVehicleRequestAction'
+import { toast } from 'react-toastify'
 
 const EnquiryForm = () => {
   const {
     user: { userData },
   } = useAppStore((state) => state)
-  //   console.log(userData, 'userData in EnquiryForm')
   const [yourName, setYourName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -30,10 +31,37 @@ const EnquiryForm = () => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    try {
-      await new Promise((r) => setTimeout(r, 800)) // mock
+    const payload = {
+      name: yourName,
+      email,
+      phone,
+      vehicle_name: model,
+      message,
+    }
 
-      alert('Inquiry submitted successfully!')
+    try {
+      const apiResponse = await customerVehicleRequestAction(payload)
+
+      if (!apiResponse.success) {
+        if (apiResponse.errors) {
+          Object.values(apiResponse.errors).forEach((msgs) => {
+            if (Array.isArray(msgs)) {
+              msgs.forEach((msg) => toast.error(msg))
+            } else {
+              toast.error(String(msgs))
+            }
+          })
+        } else {
+          toast.error(apiResponse.message)
+        }
+
+        setIsSubmitting(false)
+        return
+      }
+
+      toast.success('Inquiry submitted successfully!')
+      setModel('')
+      setMessage('')
     } catch (e) {
       console.error(e)
     } finally {
@@ -93,7 +121,7 @@ const EnquiryForm = () => {
       {/* Model */}
       <div>
         <label className="mb-1 block text-left text-sm font-medium">
-          Model You Are Looking For
+          Vehicle Name
         </label>
         <input
           type="text"
@@ -127,7 +155,7 @@ const EnquiryForm = () => {
         isDisabled={isSubmitting}
       >
         {isSubmitting && <LoadingSpinner className="h-5 w-5" />}
-        Submit Inquiry
+        {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
       </Button>
     </form>
   )
