@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { CheckboxGroup, Form } from 'react-aria-components'
 import { type FormEvent, useEffect, useState } from 'react'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import routes from '@/routes'
 import { toastErrors } from '@/futils'
 import { useRouter } from '@/i18n/routing'
@@ -15,6 +15,9 @@ import Button from '@/components/common/Button'
 import Checkbox from '@/components/common/Checkbox'
 import InputField from '@/components/common/InputField'
 import corporateLeasingFormAction from '@/actions/webforms/corporateLeasingFormAction'
+import { Honeypot } from '@/lib/forms/Honeypot'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { CorporateLeasingEnquirySchema } from '@/lib/forms/schemas/corporateLeasingEnquiry.schema'
 
 const Heading = ({ text }: { text: string }) => (
   <h2 className="text-2xl font-medium">{text}</h2>
@@ -40,9 +43,35 @@ const CorporateLeasingForm = () => {
   const [numberOfVehicles, setNumberOfVehicles] = useState('')
   const [vehicleInterestedIn, setVehicleInterestedIn] = useState('')
   const [vehicleCategory, setVehicleCategory] = useState<string[]>([])
+  const [honeypot, setHoneypot] = useState('')
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
+  const { validate } = useZodValidation(CorporateLeasingEnquirySchema)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (honeypot) return
+
+    const payload = {
+      name,
+      phone,
+      email,
+      companyName,
+      vehicleInterestedIn,
+      numberOfVehicles,
+      vehicleCategory,
+      message,
+      honeypot,
+    }
+
+    const result = validate(payload)
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
     const res = await corporateLeasingFormAction({
       // search parameters fields
       source,
@@ -57,13 +86,17 @@ const CorporateLeasingForm = () => {
       number_vehicles: numberOfVehicles,
       vehicle_interested_in: vehicleInterestedIn,
       vehicle_category: vehicleCategory.join(','),
+      captcha_token: token,
+      middle_name2: honeypot,
     })
 
     if (res.success) {
       toast.success(res.message)
+      reset()
       return router.push(routes.webform.success)
     }
 
+    reset()
     return toastErrors(res.errors)
   }
 
@@ -167,8 +200,12 @@ const CorporateLeasingForm = () => {
         label={t('Your Message')}
         placeholder={t('Specific Requirement')}
       />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
+
+      <div className="mb-4">{Recaptcha}</div>
+
       <Button size="big" theme="primary" type="submit" isDisabled={isPending}>
-        {t('Send Message')}
+        {isPending ? t('Submitting…') : t('Send Message')}
       </Button>
     </Form>
   )

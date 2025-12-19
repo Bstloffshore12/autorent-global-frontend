@@ -32,7 +32,8 @@
       "@/sections/*": ["./frontend/sections/*"],
       "@/sampleData/*": ["./backend/sampleData/*"],
       "@/components/*": ["./frontend/components/*"],
-      "@/modal/*": ["./frontend/components/modal/*"]
+      "@/modal/*": ["./frontend/components/modal/*"],
+      "@/lib/*": ["./frontend/lib/*"]
     }
   },
   "include": [

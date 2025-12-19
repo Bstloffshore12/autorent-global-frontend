@@ -6,7 +6,7 @@ import { Form } from 'react-aria-components'
 import { useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { type FormEvent, useEffect, useState } from 'react'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import routes from '@/routes'
 import { toastErrors } from '@/futils'
 import { useAppStore } from '@/store/provider'
@@ -15,6 +15,9 @@ import { Link, useRouter } from '@/i18n/routing'
 import { type CarDetail } from '@/model/CarModel'
 import InputField from '@/components/common/InputField'
 import carEnquiryFormAction from '@/actions/webforms/carEnquiryFormAction'
+import { Honeypot } from '@/lib/forms/Honeypot'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { CarEnquirySchema } from '@/lib/forms/schemas/carEnquiry.schema'
 
 const CarEnquiryForm = ({ car }: { car?: CarDetail }) => {
   const t = useTranslations()
@@ -27,15 +30,38 @@ const CarEnquiryForm = ({ car }: { car?: CarDetail }) => {
   const campaign = searchParams.get('utm_campaign') || 'website'
 
   const { userData } = useAppStore((state) => state.user)
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
+  const { validate } = useZodValidation(CarEnquirySchema)
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [company, setCompany] = useState('')
+  const [honeypot, setHoneypot] = useState('')
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (honeypot) return
+
+    const payload = {
+      name,
+      phone,
+      email,
+      company,
+      message,
+      honeypot,
+    }
+
+    const result = validate(payload)
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
 
     const res = await carEnquiryFormAction({
       // search parameters fields
@@ -49,13 +75,16 @@ const CarEnquiryForm = ({ car }: { car?: CarDetail }) => {
       message,
       company,
       vehicle: car?.id,
+      captcha_token: token,
+      middle_name2: honeypot,
     })
 
     if (res.success) {
       toast.success(res.message)
+      reset()
       return router.push(routes.webform.success)
     }
-
+    reset()
     return toastErrors(res.errors)
   }
 
@@ -128,8 +157,12 @@ const CarEnquiryForm = ({ car }: { car?: CarDetail }) => {
         label={t('Your Message')}
         placeholder={t('Specific Requirement')}
       />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
+
+      <div className="mb-4">{Recaptcha}</div>
+
       <Button size="big" theme="primary" type="submit" isDisabled={isPending}>
-        {t('Send Message')}
+        {isPending ? t('Submitting…') : t('Send Message')}
       </Button>
     </Form>
   )

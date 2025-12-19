@@ -1,6 +1,6 @@
 'use state'
 
-import moment from 'moment-timezone'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 
@@ -67,12 +67,12 @@ const usePickUpDropOff = (): {
   )
     ? timeConstraints
     : {
-      hours: {
-        min: moment.tz(timezone).hour() + 1,
-        max: timeConstraints.hours.max,
-        step: timeConstraints.hours.step,
-      },
-    }
+        hours: {
+          min: new Date().getHours() + 1,
+          max: timeConstraints.hours.max,
+          step: timeConstraints.hours.step,
+        },
+      }
 
   const incrementDropoffTime = () =>
     dropoffTime && setDropoffTime(dropoffTime.add({ days: 1 }))

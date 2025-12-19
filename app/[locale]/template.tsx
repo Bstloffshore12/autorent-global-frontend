@@ -12,6 +12,7 @@ import OperatingCountryModel from '@/model/OperatingCountryModel'
 import HeaderDrawerNavigation from '@/components/HeaderDrawerNavigation'
 import OperatingCountrySelectorModal from '@/modal/OperatingCountrySelectorModal'
 import getOperatingCountriesAction from '@/actions/operatingCountry/getOperatingCountriesAction'
+import NotFoundPage from './not-found'
 
 const Template = async ({ children }: { children: React.ReactNode }) => {
   const headerList = await headers()
@@ -65,7 +66,7 @@ const Template = async ({ children }: { children: React.ReactNode }) => {
       </>
     )
 
-  return null
+  return NotFoundPage()
 }
 
 export default Template

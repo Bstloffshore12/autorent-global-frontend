@@ -1,16 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { toast } from 'react-toastify'
+
 import { useAppStore } from '@/store/provider'
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
+import { Honeypot } from '@/lib/forms/Honeypot'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { PopupEnquirySchema } from '@/lib/forms/schemas/popUpEnquiry.schema'
 
 const PopupForm = ({ locale }: { locale: string }) => {
   const [isOpen, setIsOpen] = useState(false)
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     phone: '',
     city: '',
+    honeypot: '',
   })
 
   const {
@@ -19,24 +26,56 @@ const PopupForm = ({ locale }: { locale: string }) => {
     },
   } = useAppStore((state) => state.general)
 
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
+  const { validate } = useZodValidation(PopupEnquirySchema)
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 500) // delay popup
+    const timer = setTimeout(() => setIsOpen(true), 500)
     return () => clearTimeout(timer)
   }, [])
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // Build message parts conditionally — do not include city for bh locale
+    // 0️⃣ Honeypot (silent block)
+    if (formData.honeypot) return
+
+    // 1️⃣ Build payload (city optional for bh)
+    const payload = {
+      username: formData.username,
+      email: formData.email,
+      phone: formData.phone,
+      city: locale === 'bh' ? undefined : formData.city,
+      honeypot: formData.honeypot,
+    }
+
+    // 2️⃣ Validate
+    const result = validate(payload)
+    if (!result.valid) {
+      Object.values(result.errors).forEach((errs) =>
+        errs.forEach((msg) => toast.error(msg))
+      )
+      return
+    }
+
+    // 3️⃣ Captcha
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
+
+    // 4️⃣ Build WhatsApp message
     const cityLine =
-      locale === 'bh' || !formData.city ? '' : `*City:* ${formData.city}\n\n`
+      locale === 'bh' || !result.data.city
+        ? ''
+        : `*City:* ${result.data.city}\n\n`
 
     const heading =
       locale === 'bh'
@@ -45,23 +84,17 @@ const PopupForm = ({ locale }: { locale: string }) => {
 
     const message =
       heading +
-      `*Name:* ${formData.username}\n` +
-      `*Email:* ${formData.email}\n` +
-      `*Phone:* ${formData.phone}\n` +
-      (cityLine ? cityLine : '') +
+      `*Name:* ${result.data.username}\n` +
+      `*Email:* ${result.data.email}\n` +
+      `*Phone:* ${result.data.phone}\n` +
+      cityLine +
       `${text}`
 
-    // Encode the message for WhatsApp URL
-    const encodedMessage = encodeURIComponent(message)
-    const whatsappUrl = `https://wa.me/${number}?text=${encodedMessage}`
+    const whatsappUrl = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 
-    // Show success message
-    toast.success('Form Submitted! Redirecting to WhatsApp...')
-
-    // Close popup
+    reset()
+    toast.success('Form submitted! Redirecting to WhatsApp...')
     setIsOpen(false)
-
-    // Open WhatsApp in new tab
     window.open(whatsappUrl, '_blank')
   }
 
@@ -69,87 +102,63 @@ const PopupForm = ({ locale }: { locale: string }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="animate-fade-in relative w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+      <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
         <h2 className="mb-2 text-center text-xl font-bold text-green-700">
           Fill the Form & Book Instantly!
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="username" className="mb-1 block font-medium">
-              Username:
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={formData.username}
-              onChange={(e) => handleInputChange('username', e.target.value)}
-              required
-              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Enter Your Username"
-            />
-          </div>
+          <input
+            value={formData.username}
+            onChange={(e) => handleInputChange('username', e.target.value)}
+            placeholder="Username"
+            className="w-full rounded border px-3 py-2"
+          />
 
-          <div>
-            <label htmlFor="email" className="mb-1 block font-medium">
-              Email:
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              required
-              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Enter Your Email"
-            />
-          </div>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            placeholder="Email"
+            className="w-full rounded border px-3 py-2"
+          />
 
-          {/* Phone Number */}
-          <div>
-            <label htmlFor="phone" className="mb-1 block font-medium">
-              Phone Number:
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              required
-              className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Enter Your Phone Number"
-            />
-          </div>
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
+            placeholder="Phone"
+            className="w-full rounded border px-3 py-2"
+          />
 
-          {/* City (only show when locale !== 'bh') */}
           {locale !== 'bh' && (
-            <div>
-              <label htmlFor="city" className="mb-1 block font-medium">
-                City:
-              </label>
-              <input
-                type="text"
-                id="city"
-                value={formData.city}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-                required={locale !== 'bh'} // redundant since field hidden for 'bh', but kept for clarity
-                className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Enter Your City"
-              />
-            </div>
+            <input
+              value={formData.city}
+              onChange={(e) => handleInputChange('city', e.target.value)}
+              placeholder="City"
+              className="w-full rounded border px-3 py-2"
+            />
           )}
 
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          {/* Honeypot */}
+          <Honeypot
+            value={formData.honeypot}
+            onChange={(v) => handleInputChange('honeypot', v)}
+          />
+
+          <div>{Recaptcha}</div>
+
+          <div className="flex gap-2">
             <button
               type="submit"
-              className="w-full rounded-md bg-green-700 py-2 font-semibold text-white hover:bg-green-800"
+              className="w-full rounded bg-green-700 py-2 font-semibold text-white hover:bg-green-800"
             >
               Submit
             </button>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="w-full rounded-md bg-red-500 py-2 font-semibold text-white hover:bg-red-600"
+              className="w-full rounded bg-red-500 py-2 font-semibold text-white hover:bg-red-600"
             >
               Close
             </button>

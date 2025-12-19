@@ -27,9 +27,7 @@ const BookingExtraKmsAndPayment = ({
   const {
     operatingCountry: { activeId, list: operatingCountryList },
   } = useAppStore((state) => state)
-  const activeCountry = operatingCountryList.find(
-    (c: any) => c.id === activeId
-  )
+  const activeCountry = operatingCountryList.find((c: any) => c.id === activeId)
   const [selectedExtraKmId, setSelectedExtraKmId] = useState<number | null>(
     null
   )
@@ -37,7 +35,6 @@ const BookingExtraKmsAndPayment = ({
   if (!activeCountry || activeCountry.extra_kilometer_service !== 1) {
     return null
   }
-
 
   const selectedExtraKm = extraKms.find((km) => km.id === selectedExtraKmId)
   const selectedPrice = selectedExtraKm

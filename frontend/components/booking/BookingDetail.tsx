@@ -1,4 +1,3 @@
-
 import Image from 'next/image'
 import { FiAlertTriangle } from 'react-icons/fi'
 import { getTranslations } from 'next-intl/server'

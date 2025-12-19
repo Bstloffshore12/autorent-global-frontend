@@ -14,6 +14,7 @@ const careerFormAction = async (formData: FormData): Promise<Return> => {
       return { success, message }
     }
     if (response.error) return { success, message, errors: response.error }
+    if(response.message) return { success, message, errors: { message: [response.message] } }
     throw Error
   } catch (error) {
     console.error({ careerFormAction: error })

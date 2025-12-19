@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { Form, type Key } from 'react-aria-components'
 import { type FormEvent, useEffect, useState } from 'react'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import routes from '@/routes'
 import { toastErrors } from '@/futils'
 import { useRouter } from '@/i18n/routing'
@@ -15,6 +15,9 @@ import Button from '@/components/common/Button'
 import Dropdown from '@/components/common/Select'
 import InputField from '@/components/common/InputField'
 import carLeasFormAction from '@/actions/webforms/carLeaseFormAction'
+import { Honeypot } from '@/lib/forms/Honeypot'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { CarLeaseEnquirySchema } from '@/lib/forms/schemas/carLeaseEnquiry.schema'
 
 type CarLeaseFormProps = {
   countries: {
@@ -43,6 +46,9 @@ const CarLeaseForm = ({ countries }: CarLeaseFormProps) => {
   const [lastName, setLastName] = useState('')
   const [firstName, setFirstName] = useState('')
   const [country, setCountry] = useState<Key>('')
+  const [honeypot, setHoneypot] = useState('')
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
+  const { validate } = useZodValidation(CarLeaseEnquirySchema)
 
   const onCountryChange = (key: Key) => {
     setCountry(key)
@@ -50,6 +56,30 @@ const CarLeaseForm = ({ countries }: CarLeaseFormProps) => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (honeypot) return
+
+    const payload = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      vehicle,
+      message,
+      country: country.toString(),
+      honeypot,
+      middle_name2: honeypot,
+    }
+
+    const result = validate(payload)
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
     const res = await carLeasFormAction({
       // search parameters fields
       source,
@@ -65,13 +95,15 @@ const CarLeaseForm = ({ countries }: CarLeaseFormProps) => {
       last_name: lastName,
       first_name: firstName,
       country: country.toString(),
+      captcha_token: token,
     })
 
     if (res.success) {
       toast.success(res.message)
+      reset()
       return router.push(routes.webform.success)
     }
-
+    reset()
     return toastErrors(res.errors)
   }
 
@@ -160,9 +192,14 @@ const CarLeaseForm = ({ countries }: CarLeaseFormProps) => {
         label={t('Your Message')}
         placeholder={t('Specific Requirement')}
       />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
+
+      <div className="mb-4">{Recaptcha}</div>
+
       <Button size="big" theme="primary" type="submit" isDisabled={isPending}>
-        {t('Send Message')}
+        {isPending ? t('Submitting…') : t('Send Message')}
       </Button>
+
     </Form>
   )
 }

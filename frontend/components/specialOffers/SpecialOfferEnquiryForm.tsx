@@ -6,7 +6,7 @@ import { Form } from 'react-aria-components'
 import { useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { type FormEvent, useEffect, useState } from 'react'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import routes from '@/routes'
 import { toastErrors } from '@/futils'
 import { useRouter } from '@/i18n/routing'
@@ -38,9 +38,14 @@ const SpecialOfferEnquiryForm = ({
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
 
     const res = await carEnquiryFormAction({
       // search parameters fields
@@ -53,13 +58,15 @@ const SpecialOfferEnquiryForm = ({
       email,
       state_id: stateId,
       type: `Special Offer | ${slug}`,
+      captcha_token: token,
     })
 
     if (res.success) {
       toast.success(res.message)
+      reset()
       return router.push(routes.webform.success)
     }
-
+    reset()
     return toastErrors(res.errors)
   }
 
@@ -105,6 +112,7 @@ const SpecialOfferEnquiryForm = ({
         labelClassName="!mb-1"
         placeholder={t('Your Phone')}
       />
+      <div className="mb-4">{Recaptcha}</div>
 
       <Button
         size="small"

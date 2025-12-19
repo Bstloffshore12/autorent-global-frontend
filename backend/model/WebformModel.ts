@@ -17,6 +17,8 @@ export type PostEnquiryProps = {
   pickup_location?: string
   rental_duration?: string
   dropoff_location?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type PostCustomerEnquiryProps = {
@@ -41,6 +43,8 @@ export type PostCarLeaseProps = {
   first_name: string
   campaign?: string
   source?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type PostContactProps = {
@@ -52,6 +56,8 @@ export type PostContactProps = {
   message: string
   campaign?: string
   source?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type PostCorporateLeasingProps = {
@@ -65,6 +71,8 @@ export type PostCorporateLeasingProps = {
   vehicle_interested_in: string
   campaign?: string
   source?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type PostFeedbackProps = {
@@ -75,6 +83,8 @@ export type PostFeedbackProps = {
   first_name: string
   campaign?: string
   source?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type PostNewsletterProps = {
@@ -97,6 +107,8 @@ export type PostRoadSideAssistanceProps = {
   breakdown_location: string
   campaign?: string
   source?: string
+  captcha_token?: string
+  middle_name2?: string
 }
 
 export type Return =

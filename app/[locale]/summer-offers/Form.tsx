@@ -3,11 +3,14 @@
 import { toast } from 'react-toastify'
 import { type FormEvent, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import routes from '@/routes'
 import { toastErrors } from '@/futils'
 import { useRouter } from '@/i18n/routing'
 import carEnquiryFormAction from '@/actions/webforms/carEnquiryFormAction'
+import { Honeypot } from '@/lib/forms/Honeypot'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { SummerOffersEnquirySchema } from '@/lib/forms/schemas/summerOffersEnquiry.schema'
 
 const Form = ({ source, campaign }: { source: string; campaign: string }) => {
   const router = useRouter()
@@ -18,9 +21,33 @@ const Form = ({ source, campaign }: { source: string; campaign: string }) => {
   const [carType, setCarType] = useState('')
   const [message, setMessage] = useState('')
   const [rentalDuration, setRentalDuration] = useState('')
+  const [honeypot, setHoneypot] = useState('')
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
+  const { validate } = useZodValidation(SummerOffersEnquirySchema)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (honeypot) return
+    const payload = {
+      name,
+      phone,
+      email,
+      car_type: carType,
+      rental_duration: rentalDuration,
+      message,
+      honeypot,
+    }
+
+    const result = validate(payload)
+
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
     const res = await carEnquiryFormAction({
       name,
       phone,
@@ -30,13 +57,16 @@ const Form = ({ source, campaign }: { source: string; campaign: string }) => {
       campaign,
       car_type: carType,
       rental_duration: rentalDuration,
+      captcha_token: token,
+      middle_name2: honeypot,
     })
 
     if (res.success) {
       toast.success(res.message)
+      reset()
       return router.push(routes.webform.success)
     }
-
+    reset()
     return toastErrors(res.errors)
   }
 
@@ -146,13 +176,41 @@ const Form = ({ source, campaign }: { source: string; campaign: string }) => {
         ></textarea>
         <div id="notesError" className="mt-1 text-sm text-red-500"></div>
       </div>
+      <Honeypot value={honeypot} onChange={(v) => setHoneypot(v)} />
+
+      <div className="mb-4">{Recaptcha}</div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+        className={`w-full rounded px-4 py-2 font-semibold text-white ${isPending ? 'cursor-not-allowed bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} `}
       >
-        Submit
+        {isPending ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg
+              className="h-4 w-4 animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+            Submitting…
+          </span>
+        ) : (
+          'Submit'
+        )}
       </button>
     </form>
   )

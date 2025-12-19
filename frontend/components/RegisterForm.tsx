@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Form, type Key, Label } from 'react-aria-components'
-
+import { useRecaptchaV2 } from '@/hooks/useRecaptcha'
 import { useAppStore } from '@/store/provider'
 import Button from '@/components/common/Button'
 import Dropdown from '@/components/common/Select'
@@ -17,6 +17,10 @@ import InputField from '@/components/common/InputField'
 import getProfileAction from '@/actions/user/getProfileAction'
 import SectionHeading from '@/components/common/SectionHeading'
 import verifyEmailAction from '@/actions/auth/verifyEmailAction'
+import { useZodValidation } from '@/lib/forms/useZodValidation'
+import { RegisterSchema } from '@/lib/forms/schemas/register.schema'
+import { VerifyOtpSchema } from '@/lib/forms/schemas/verifyOtp.schema'
+
 
 type FormState = 'NotRegistered' | 'otpSent'
 
@@ -58,7 +62,8 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
     setAuth: { setIsLoggedIn, setIsAuthModalOpen },
   } = useAppStore((state) => state)
   const phoneCodes = usePhoneCodes()
-
+  const { validate: validateRegister } = useZodValidation(RegisterSchema)
+  const { validate: validateOtp } = useZodValidation(VerifyOtpSchema)
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [lastName, setLastName] = useState('')
@@ -70,9 +75,30 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
   const [formState, setFormState] = useState<FormState>('NotRegistered')
 
   const [otp, setOtp] = useState('')
+  const { token, isVerified, reset, Recaptcha } = useRecaptchaV2()
 
   const register = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const payload1 = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      phoneCode: phoneCode.toString() || phoneCodes.default,
+      password,
+      confirmPassword,
+    }
+
+    const result = validateRegister(payload1)
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
+
+    if (!isVerified || !token) {
+      toast.error('Please verify that you are not a robot')
+      return
+    }
 
     const payload = {
       email,
@@ -81,6 +107,7 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
       first_name: firstName,
       c_password: confirmPassword,
       phone: `${phoneCode.toString().split('-')[0] || phoneCodes.default.split('-')[0]}${phone}`,
+      captcha_token: token,
     }
 
     const res = await signUpAction(payload)
@@ -93,12 +120,17 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
 
       return toast.success(res.message)
     }
-
+      reset()
     return toastErrors(res.errors)
   }
 
   const verifyEmail = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const result = validateOtp({ otp })
+    if (!result.valid) {
+      toastErrors(result.errors)
+      return
+    }
     const res = await verifyEmailAction({ token: otp })
 
     if (res.success) {
@@ -195,6 +227,7 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
               : 'mt-0 h-0 opacity-0'
           )}
         />
+        <div className="mb-4">{Recaptcha}</div>
 
         <div
           className={classnames(
