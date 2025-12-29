@@ -12,10 +12,7 @@ export const CarEnquirySchema = z.object({
 
   company: z.string().optional(),
 
-  message: z
-    .string()
-    .trim()
-    .min(10, 'Message must be at least 10 characters'),
+  message: z.string().trim().min(10, 'Message must be at least 10 characters'),
 
   honeypot: z.string().optional(),
 })

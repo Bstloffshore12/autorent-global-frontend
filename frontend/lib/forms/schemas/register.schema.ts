@@ -9,9 +9,7 @@ export const RegisterSchema = z
 
     phoneCode: z.string().min(1, 'Country code is required'),
 
-    phone: z
-      .string()
-      .regex(/^[0-9]{6,15}$/, 'Invalid phone number'),
+    phone: z.string().regex(/^[0-9]{6,15}$/, 'Invalid phone number'),
 
     password: z.string().min(8, 'Password must be at least 8 characters'),
 

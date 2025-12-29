@@ -16,6 +16,7 @@ import { useAppStore } from '@/store/provider'
 import AdditionalServicesFormMobile from '../carDetail/AdditionalServicesForMobile'
 import { RentalAdditional } from '@/model/CarModel'
 import DropoffChargeDisplay from '../carDetail/DropOffChargeDisplay'
+import WhatsAppLeaseButton from '../WhatsappLeaseButton'
 interface CarRentalBookingProps {
   carData: CarData
   paymentOptions: PaymentMethod[]
@@ -411,7 +412,7 @@ export function PersonalLeaseCarDetail({
                 />
                 <DropoffChargeDisplay />
 
-                <ProceedToPayment
+                {/* <ProceedToPayment
                   basePrices={{
                     daily: currentPrice,
                     weekly: currentPrice,
@@ -425,6 +426,18 @@ export function PersonalLeaseCarDetail({
                   isDailyPriceActive={false} // to determine if car is rentable for daily mode
                   isWeeklyPriceActive={false} // to determine if car is rentable for daily mode
                   isMonthlyPriceActive={true} // to determine if car is rentable for daily mode
+                /> */}
+                <WhatsAppLeaseButton
+                  carMake={carData.make}
+                  carModel={carData.model}
+                  yearTitle={currentYear?.year_title || ''}
+                  durationTitle={currentDuration?.duration_title || ''}
+                  kmTitle={
+                    currentDuration?.kilometer_pricing.find(
+                      (km) => km.kilometer_id === selectedKilometers
+                    )?.kilometer_title || ''
+                  }
+                  basePrice={currentPrice}
                 />
 
                 <p className="mt-2 text-xs text-gray-500">

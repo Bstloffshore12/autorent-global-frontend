@@ -17,6 +17,7 @@ import {
   compareDate,
   toZonedDateTime,
   dateToApiAcceptableFormat,
+  getCountryTimezone,
   getUserAcceptableDocumentsType,
 } from '@/futils'
 import routes from '@/routes'
@@ -50,6 +51,8 @@ const ResidenceIdForm = ({
   const locale = useLocale() as GetOperatingCountriesData['iso2']
 
   const location = useAppStore((state) => state.general.contact.location)
+  const { activeId } = useAppStore((state) => state.operatingCountry)
+  const timezone = getCountryTimezone(activeId)
 
   const [isEditable, setIsEditable] = useState(false)
 
@@ -87,11 +90,8 @@ const ResidenceIdForm = ({
     setFileBack(fileTarget.files?.[0] || null)
   }
 
-  const checkIfValidDate = (value: ZonedDateTime) =>
-    compareDate({ ending: now('Etc/GMT-4'), starting: value }) <= 0
-
   const handleSetExpiry = (value: ZonedDateTime | null) => {
-    if (value && checkIfValidDate(value)) setExpiry(value)
+    if (value) setExpiry(value)
   }
 
   const updateProfileDetails = async (e: FormEvent<HTMLFormElement>) => {
@@ -187,7 +187,7 @@ const ResidenceIdForm = ({
             isDisabled={!isEditable}
             onChange={handleSetExpiry}
             label={t('Residence ID Expiry')}
-            minValue={now('Etc/GMT-4').add({ days: 1 })}
+            minValue={now(timezone).add({ days: 1 })}
           />
           <Dropdown
             bordered

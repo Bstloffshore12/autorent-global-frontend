@@ -13,6 +13,7 @@ import type { PaymentMethod } from '@/model/PaymentModel'
 import type { ZonedDateTime } from '@internationalized/date'
 import { useAppStore } from '@/store/provider'
 import { RentalAdditional } from '@/model/CarModel'
+import WhatsAppLeaseButton from '../WhatsappLeaseButton'
 
 interface MonthlyLeaseCarDetailProps {
   carData: CarData // Replace with proper type if available
@@ -388,7 +389,7 @@ export default function MonthlyLeaseCarDetail({
                   rentalAdditional={normalizedRentalAdditional}
                 />
 
-                <ProceedToPayment
+                {/* <ProceedToPayment
                   basePrices={{
                     daily: currentPrice,
                     weekly: currentPrice,
@@ -402,6 +403,19 @@ export default function MonthlyLeaseCarDetail({
                   isDailyPriceActive={false}
                   isWeeklyPriceActive={false}
                   isMonthlyPriceActive={true}
+                /> */}
+
+                <WhatsAppLeaseButton
+                  carMake={carData.make}
+                  carModel={carData.model}
+                  yearTitle={currentYear?.year_title || ''}
+                  durationTitle={currentDuration?.duration_title || ''}
+                  kmTitle={
+                    currentDuration?.kilometer_pricing.find(
+                      (km) => km.kilometer_id === selectedKilometers
+                    )?.kilometer_title || ''
+                  }
+                  basePrice={currentPrice}
                 />
 
                 <p className="mt-2 text-xs text-gray-500">

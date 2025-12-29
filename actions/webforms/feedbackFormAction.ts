@@ -17,7 +17,8 @@ const feedbackFormAction = async (data: PostFeedbackProps): Promise<Return> => {
       return { success, message }
     }
     if (response.error) return { success, message, errors: response.error }
-    if(response.message) return { success, message, errors: { message: [response.message] } }
+    if (response.message)
+      return { success, message, errors: { message: [response.message] } }
     throw Error(message)
   } catch (error) {
     console.error({ feedbackFormAction: error })

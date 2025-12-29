@@ -53,17 +53,17 @@ const RoadSideAssistanceForm = () => {
     }
     if (honeypot) return
     const payload = {
-    first_name: firstName,
-    last_name: lastName,
-    email,
-    phone,
-    booking_ref_no: bookingReferenceNumber,
-    breakdown_location: breakdownLocation,
-    message: causeForBreakdown,
-    honeypot,
-  }
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      booking_ref_no: bookingReferenceNumber,
+      breakdown_location: breakdownLocation,
+      message: causeForBreakdown,
+      honeypot,
+    }
 
-  const result = validate(payload)
+    const result = validate(payload)
     if (!result.valid) {
       toastErrors(result.errors)
       return
@@ -82,7 +82,7 @@ const RoadSideAssistanceForm = () => {
       breakdown_location: breakdownLocation,
       booking_ref_no: bookingReferenceNumber,
       captcha_token: token,
-      middle_name2: honeypot, 
+      middle_name2: honeypot,
     })
 
     if (res.success) {
@@ -178,10 +178,7 @@ const RoadSideAssistanceForm = () => {
         label={t('Cause For Breakdown')}
         placeholder={t('Cause For Breakdown')}
       />
-      <Honeypot
-        value={honeypot}
-        onChange={setHoneypot}
-      />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
       <div className="mb-4">{Recaptcha}</div>
       <Button isDisabled={isPending} size="big" theme="primary" type="submit">
         {isPending ? t('Submitting…') : t('Send Message')}

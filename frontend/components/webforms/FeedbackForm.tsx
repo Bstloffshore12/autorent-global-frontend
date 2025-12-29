@@ -47,15 +47,15 @@ const FeedbackForm = () => {
     e.preventDefault()
     if (honeypot) return
     const payload = {
-    first_name: firstName,
-    last_name: lastName,
-    email,
-    phone,
-    message,
-    honeypot,
-  }
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      message,
+      honeypot,
+    }
 
-  const result = validate(payload)
+    const result = validate(payload)
     if (!result.valid) {
       toastErrors(result.errors)
       return
@@ -151,10 +151,7 @@ const FeedbackForm = () => {
         placeholder={t('Your Feedback')}
         label={t('Your Feedback is valuable to us')}
       />
-      <Honeypot
-        value={honeypot}
-        onChange={setHoneypot}
-      />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
       <div className="mb-4">{Recaptcha}</div>
       <Button isDisabled={isPending} size="big" theme="primary" type="submit">
         {isPending ? t('Submitting…') : t('Send Message')}

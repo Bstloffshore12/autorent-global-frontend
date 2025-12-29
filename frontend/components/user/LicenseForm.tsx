@@ -19,8 +19,10 @@ import {
 } from '@/futils'
 import routes from '@/routes'
 import useUser from '@/hooks/useUser'
+import { useAppStore } from '@/store/provider'
 import Button from '@/components/common/Button'
 import { type UserData } from '@/model/UserModel'
+import { getCountryTimezone } from '@/futils'
 import InputField from '@/components/common/InputField'
 import FileDropZone from '@/components/common/FileDropZone'
 import SectionHeading from '@/components/common/SectionHeading'
@@ -36,6 +38,9 @@ type LicenseFormProps = {
 
 const LicenseForm = ({ countries, userProfile }: LicenseFormProps) => {
   const t = useTranslations()
+
+  const { activeId } = useAppStore((state) => state.operatingCountry)
+  const timezone = getCountryTimezone(activeId)
 
   const { getProfile } = useUser()
 
@@ -75,11 +80,8 @@ const LicenseForm = ({ countries, userProfile }: LicenseFormProps) => {
     setFileBack(fileTarget.files?.[0] || null)
   }
 
-  const checkIfValidDate = (value: ZonedDateTime) =>
-    compareDate({ ending: now('Etc/GMT-4'), starting: value }) <= 0
-
   const handleSetExpiry = (value: ZonedDateTime | null) => {
-    if (value && checkIfValidDate(value)) setExpiry(value)
+    if (value) setExpiry(value)
   }
 
   const updateProfileDetails = async (e: FormEvent<HTMLFormElement>) => {
@@ -158,7 +160,7 @@ const LicenseForm = ({ countries, userProfile }: LicenseFormProps) => {
             isDisabled={!isEditable}
             onChange={handleSetExpiry}
             label={t('License Expiry')}
-            minValue={now('Etc/GMT-4').add({ days: 1 })}
+            minValue={now(timezone).add({ days: 1 })}
           />
           <Dropdown
             bordered

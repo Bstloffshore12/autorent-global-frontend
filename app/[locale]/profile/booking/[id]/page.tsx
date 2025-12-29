@@ -8,7 +8,6 @@ interface BookingDetailPageProps {
 const BookingDetailPage = async ({ params }: BookingDetailPageProps) => {
   const { id } = await params
   const res = await getBookingDetailAction(id)
-
   return res.success && res.data ? (
     <BookingDetail bookingData={res.data} />
   ) : null

@@ -60,7 +60,7 @@ const usePickUpDropOff = (): {
       setDropoffTime(dropoffTime.add({ days: -1 }))
   }
 
-  const timeConstraints = { hours: { min: 8, max: 19, step: 1 } }
+  const timeConstraints = { hours: { min: 8, max: 21, step: 1 } }
 
   const pickupTimeConstraints = moment(pickupTime?.toDate()).isAfter(
     moment.tz(timezone).add(1, 'day')

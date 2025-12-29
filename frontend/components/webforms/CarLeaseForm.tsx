@@ -199,7 +199,6 @@ const CarLeaseForm = ({ countries }: CarLeaseFormProps) => {
       <Button size="big" theme="primary" type="submit" isDisabled={isPending}>
         {isPending ? t('Submitting…') : t('Send Message')}
       </Button>
-
     </Form>
   )
 }

@@ -19,7 +19,8 @@ const carEnquiryFormAction = async (
       return { success, message }
     }
     if (response.error) return { success, message, errors: response.error }
-    if(response.message) return { success, message, errors: { message: [response.message] } }
+    if (response.message)
+      return { success, message, errors: { message: [response.message] } }
     throw Error
   } catch (error) {
     console.error({ carEnquiryFormAction: error })

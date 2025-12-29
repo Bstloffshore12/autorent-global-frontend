@@ -1,7 +1,10 @@
 import { z } from 'zod'
 
 export const CarLeaseEnquirySchema = z.object({
-  firstName: z.string().trim().min(2, 'First name must be at least 2 characters'),
+  firstName: z
+    .string()
+    .trim()
+    .min(2, 'First name must be at least 2 characters'),
 
   lastName: z.string().trim().min(2, 'Last name must be at least 2 characters'),
 
@@ -18,10 +21,7 @@ export const CarLeaseEnquirySchema = z.object({
 
   country: z.string().min(1, 'Country is required'),
 
-  message: z
-    .string()
-    .trim()
-    .min(10, 'Message must be at least 10 characters'),
+  message: z.string().trim().min(10, 'Message must be at least 10 characters'),
 
   honeypot: z.string().optional(),
 })

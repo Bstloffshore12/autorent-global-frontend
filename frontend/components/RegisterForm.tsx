@@ -21,7 +21,6 @@ import { useZodValidation } from '@/lib/forms/useZodValidation'
 import { RegisterSchema } from '@/lib/forms/schemas/register.schema'
 import { VerifyOtpSchema } from '@/lib/forms/schemas/verifyOtp.schema'
 
-
 type FormState = 'NotRegistered' | 'otpSent'
 
 type SubmitButtonProps = {
@@ -120,7 +119,7 @@ const RegisterForm = ({ toLogin }: { toLogin: VoidFunction }) => {
 
       return toast.success(res.message)
     }
-      reset()
+    reset()
     return toastErrors(res.errors)
   }
 

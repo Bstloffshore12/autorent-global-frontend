@@ -16,9 +16,8 @@ import FeaturesChips from '@/components/carDetail/FeaturesChips'
 import AdditionalServiceList from '@/components/booking/AdditionalServiceList'
 import CarAttributesSection2 from '@/components/carDetail/CarAttributesSection2'
 import BookingDetailPaymentSummary from '@/components/booking/BookingDetailPaymentSummary'
-// import BookingExtraKmsAndPayment from '@/components/booking/BookingExtraKmsAndPayment'
 import PaymentModel, { type PaymentMethod } from '@/model/PaymentModel'
-import BookingExtraKmsAndPayment from './BookingExtraKmsAndPayment'
+// import BookingExtraKmsAndPayment from './BookingExtraKmsAndPayment'
 
 interface BookingDetailProps {
   bookingData: BookingDetailData
@@ -180,7 +179,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             )}
           </Card>
 
-          <BookingExtraKmsAndPayment
+          {/* <BookingExtraKmsAndPayment
             carSlug={bookingData.car.slug}
             currency={bookingData.order.currency}
             pricingMode={bookingData.order.pricemode}
@@ -188,7 +187,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             totalAmount={bookingData.order.total_amount}
             extraKms={bookingData.extra_kilometer_options || []}
             paymentMethods={paymentMethods}
-          />
+          /> */}
         </div>
 
         <div className="sticky top-0 hidden h-max gap-6 lg:grid">

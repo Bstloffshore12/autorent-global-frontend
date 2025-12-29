@@ -238,7 +238,7 @@ const AdditionalServicesFormMobile = ({
         </p>
       )}
       {/* EXTRA KM SECTION */}
-      <div className="mt-3">
+      {/* <div className="mt-3">
         <p className="col-span-2 font-semibold text-gray-900">
           Extra Kilometers
         </p>
@@ -266,7 +266,6 @@ const AdditionalServicesFormMobile = ({
                     : 'border-gray-300 bg-white hover:border-blue-300'
                 )}
               >
-                {/* Left side: radio + title */}
                 <div className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -278,7 +277,6 @@ const AdditionalServicesFormMobile = ({
                   <span className="font-medium">{srv.title}</span>
                 </div>
 
-                {/* Right side: price */}
                 <span
                   className={classnames(
                     'text-sm font-semibold',
@@ -291,7 +289,7 @@ const AdditionalServicesFormMobile = ({
             )
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

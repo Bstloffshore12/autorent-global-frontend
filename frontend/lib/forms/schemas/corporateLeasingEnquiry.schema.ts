@@ -25,10 +25,7 @@ export const CorporateLeasingEnquirySchema = z.object({
     .array(z.string())
     .min(1, 'Select at least one vehicle category'),
 
-  message: z
-    .string()
-    .trim()
-    .min(10, 'Message must be at least 10 characters'),
+  message: z.string().trim().min(10, 'Message must be at least 10 characters'),
 
   honeypot: z.string().optional(),
 })
