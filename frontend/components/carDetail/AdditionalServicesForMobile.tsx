@@ -149,6 +149,17 @@ const AdditionalServicesFormMobile = ({
     setAdditionalServices(SelectedAddOns)
   }
 
+  const visibleExtraKmServices = extraKmServices.filter((srv) => {
+    const price =
+      pricingMode === 'daily'
+        ? srv.daily
+        : pricingMode === 'weekly'
+          ? srv.weekly
+          : srv.monthly
+
+    return price && Number(price) > 0
+  })
+
   useEffect(() => {
     // Auto-select only mandatory services (mandatory: 1)
     const mandatoryServices = filteredRentalAdditional.filter(
@@ -238,58 +249,58 @@ const AdditionalServicesFormMobile = ({
         </p>
       )}
       {/* EXTRA KM SECTION */}
-      {/* <div className="mt-3">
-        <p className="col-span-2 font-semibold text-gray-900">
-          Extra Kilometers
-        </p>
+      {visibleExtraKmServices.length > 0 && (
+        <div className="mt-3">
+          <p className="col-span-2 font-semibold text-gray-900">
+            Extra Kilometers
+          </p>
 
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {extraKmServices.map((srv) => {
-            const isSelected = selectedExtraKmId === srv.id
-            const price =
-              pricingMode === 'daily'
-                ? srv.daily
-                : pricingMode === 'weekly'
-                  ? srv.weekly
-                  : srv.monthly
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            {visibleExtraKmServices.map((srv) => {
+              const isSelected = selectedExtraKmId === srv.id
+              const price =
+                pricingMode === 'daily'
+                  ? srv.daily
+                  : pricingMode === 'weekly'
+                    ? srv.weekly
+                    : srv.monthly
 
-            if (!price || Number(price) === 0) return null
-
-            return (
-              <div
-                key={srv.id}
-                onClick={() => handleExtraKmSelect(srv.id)}
-                className={classnames(
-                  'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
-                  isSelected
-                    ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-blue-200'
-                    : 'border-gray-300 bg-white hover:border-blue-300'
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="extraKmOption"
-                    checked={isSelected}
-                    onChange={() => handleExtraKmSelect(srv.id)}
-                    className="h-4 w-4 cursor-pointer accent-blue-600"
-                  />
-                  <span className="font-medium">{srv.title}</span>
-                </div>
-
-                <span
+              return (
+                <div
+                  key={srv.id}
+                  onClick={() => handleExtraKmSelect(srv.id)}
                   className={classnames(
-                    'text-sm font-semibold',
-                    isSelected ? 'text-blue-700' : 'text-gray-800'
+                    'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
+                    isSelected
+                      ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-blue-200'
+                      : 'border-gray-300 bg-white hover:border-blue-300'
                   )}
                 >
-                  {price}
-                </span>
-              </div>
-            )
-          })}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="extraKmOption"
+                      checked={isSelected}
+                      onChange={() => handleExtraKmSelect(srv.id)}
+                      className="h-4 w-4 cursor-pointer accent-blue-600"
+                    />
+                    <span className="font-medium">{srv.title}</span>
+                  </div>
+
+                  <span
+                    className={classnames(
+                      'text-sm font-semibold',
+                      isSelected ? 'text-blue-700' : 'text-gray-800'
+                    )}
+                  >
+                    {price}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div> */}
+      )}
     </div>
   )
 }

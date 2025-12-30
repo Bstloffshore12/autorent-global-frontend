@@ -36,7 +36,7 @@ const BookingExtraKmsAndPayment = ({
     return null
   }
 
-  const selectedExtraKm = extraKms.find((km) => km.id === selectedExtraKmId)
+  const selectedExtraKm = extraKms.find((km) => km.additional_charge_id === selectedExtraKmId)
   const selectedPrice = selectedExtraKm
     ? pricingMode === 'daily'
       ? selectedExtraKm.daily
@@ -66,12 +66,12 @@ const BookingExtraKmsAndPayment = ({
 
               if (!price || Number(price) === 0) return null
 
-              const isSelected = selectedExtraKmId === srv.id
+              const isSelected = selectedExtraKmId === srv.additional_charge_id
 
               return (
                 <div
-                  key={srv.id}
-                  onClick={() => handleExtraKmSelect(srv.id)}
+                  key={srv.additional_charge_id}
+                  onClick={() => handleExtraKmSelect(srv.additional_charge_id)}
                   className={classnames(
                     'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
                     isSelected
@@ -84,7 +84,7 @@ const BookingExtraKmsAndPayment = ({
                       type="radio"
                       name="extraKmOption"
                       checked={isSelected}
-                      onChange={() => handleExtraKmSelect(srv.id)}
+                      onChange={() => handleExtraKmSelect(srv.additional_charge_id)}
                       className="h-4 w-4 cursor-pointer accent-blue-600"
                     />
                     <span className="font-medium">{srv.title}</span>

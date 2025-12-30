@@ -17,7 +17,7 @@ import AdditionalServiceList from '@/components/booking/AdditionalServiceList'
 import CarAttributesSection2 from '@/components/carDetail/CarAttributesSection2'
 import BookingDetailPaymentSummary from '@/components/booking/BookingDetailPaymentSummary'
 import PaymentModel, { type PaymentMethod } from '@/model/PaymentModel'
-// import BookingExtraKmsAndPayment from './BookingExtraKmsAndPayment'
+import BookingExtraKmsAndPayment from './BookingExtraKmsAndPayment'
 
 interface BookingDetailProps {
   bookingData: BookingDetailData
@@ -26,7 +26,6 @@ interface BookingDetailProps {
 const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
   const t = await getTranslations()
   const paymentMethodsRes = await PaymentModel.getMethods()
-
   const paymentMethods = paymentMethodsRes.data as PaymentMethod[]
 
   const basePrices = {
@@ -179,7 +178,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             )}
           </Card>
 
-          {/* <BookingExtraKmsAndPayment
+          <BookingExtraKmsAndPayment
             carSlug={bookingData.car.slug}
             currency={bookingData.order.currency}
             pricingMode={bookingData.order.pricemode}
@@ -187,7 +186,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             totalAmount={bookingData.order.total_amount}
             extraKms={bookingData.extra_kilometer_options || []}
             paymentMethods={paymentMethods}
-          /> */}
+          />
         </div>
 
         <div className="sticky top-0 hidden h-max gap-6 lg:grid">

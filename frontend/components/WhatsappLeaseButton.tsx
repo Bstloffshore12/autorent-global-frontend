@@ -31,13 +31,11 @@ export default function WhatsAppLeaseButton({
     return match ? Number(match[1]) : 1
   }, [durationTitle])
 
-
-
-
-
   // Generate readable list of selected add-ons
   const selectedAddonsText = (additionalServices || [])
-    .filter((s: any) => s.mandatory === 1 || s.selected === true || s.default === 1)
+    .filter(
+      (s: any) => s.mandatory === 1 || s.selected === true || s.default === 1
+    )
     .map((s: any) => `• ${s.title}: ${s.monthly || s.daily || 0} AED`)
     .join('\n')
 
