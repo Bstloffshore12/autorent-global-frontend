@@ -6,7 +6,7 @@
     "dev": "next dev -p 3005",
     "lint": "next lint",
     "build": "next build",
-    "start": "next start -p 3007",
+    "start": "next start -p 3005",
     "format": "npx prettier . --write",
     "check": "npm run format & npx tsc --noemit"
   },
@@ -36,7 +36,7 @@
     "server-only": "^0.0.1",
     "swiper": "^11.1.15",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.2.1",
+    "zod": "^4.3.4",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

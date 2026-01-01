@@ -72,13 +72,20 @@ const BookingExtraKmsAndPayment = ({
         : pricingMode === 'weekly'
           ? selectedKm.weekly
           : selectedKm.monthly
-    console.log({ selectedExtraKmId }, "selectedExtraKmId", { paymentId }, "paymentId", { orderId }, "orderId")
+    console.log(
+      { selectedExtraKmId },
+      'selectedExtraKmId',
+      { paymentId },
+      'paymentId',
+      { orderId },
+      'orderId'
+    )
     const res = await getPaymentUrlExtraKmsAction({
       order_id: orderId,
       payment_id: paymentId,
       rental_additional_charge_id: selectedExtraKmId,
     })
-    console.log(JSON.parse(JSON.stringify(res)), "res snapshot");
+    console.log(JSON.parse(JSON.stringify(res)), 'res snapshot')
 
     if (res.success) {
       router.push(res.data.payment_url)
@@ -104,12 +111,15 @@ const BookingExtraKmsAndPayment = ({
 
               if (!price || Number(price) === 0) return null
 
-              const isSelected = selectedExtraKmId === srv.rental_additional_charge_id
+              const isSelected =
+                selectedExtraKmId === srv.rental_additional_charge_id
 
               return (
                 <div
                   key={srv.rental_additional_charge_id}
-                  onClick={() => handleExtraKmSelect(srv.rental_additional_charge_id)}
+                  onClick={() =>
+                    handleExtraKmSelect(srv.rental_additional_charge_id)
+                  }
                   className={classnames(
                     'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
                     isSelected
