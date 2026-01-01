@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import { type PaymentMethod } from '@/model/PaymentModel'
 import Card from '@/components/common/Card'
 import { classnames } from '@/futils'
 import BookingPaymentInterface from './BookingPaymentInterface'
 import { useAppStore } from '@/store/provider'
+import getPaymentUrlExtraKmsAction from '@/actions/getPaymentUrlExtraKmsAction'
 
 interface BookingExtraKmsAndPaymentProps {
   carSlug: string
@@ -24,6 +27,7 @@ const BookingExtraKmsAndPayment = ({
   extraKms,
   paymentMethods,
 }: BookingExtraKmsAndPaymentProps) => {
+  const router = useRouter()
   const {
     operatingCountry: { activeId, list: operatingCountryList },
   } = useAppStore((state) => state)
@@ -36,7 +40,9 @@ const BookingExtraKmsAndPayment = ({
     return null
   }
 
-  const selectedExtraKm = extraKms.find((km) => km.additional_charge_id === selectedExtraKmId)
+  const selectedExtraKm = extraKms.find(
+    (km) => km.rental_additional_charge_id === selectedExtraKmId
+  )
   const selectedPrice = selectedExtraKm
     ? pricingMode === 'daily'
       ? selectedExtraKm.daily
@@ -47,6 +53,38 @@ const BookingExtraKmsAndPayment = ({
 
   const handleExtraKmSelect = (id: number) => {
     setSelectedExtraKmId(selectedExtraKmId === id ? null : id)
+  }
+
+  const handlePaymentSubmit = async (paymentId: number) => {
+    if (!selectedExtraKmId) {
+      return
+    }
+
+    const selectedKm = extraKms.find(
+      (km) => km.rental_additional_charge_id === selectedExtraKmId
+    )
+
+    if (!selectedKm) return
+
+    const amount =
+      pricingMode === 'daily'
+        ? selectedKm.daily
+        : pricingMode === 'weekly'
+          ? selectedKm.weekly
+          : selectedKm.monthly
+    console.log({ selectedExtraKmId }, "selectedExtraKmId", { paymentId }, "paymentId", { orderId }, "orderId")
+    const res = await getPaymentUrlExtraKmsAction({
+      order_id: orderId,
+      payment_id: paymentId,
+      rental_additional_charge_id: selectedExtraKmId,
+    })
+    console.log(JSON.parse(JSON.stringify(res)), "res snapshot");
+
+    if (res.success) {
+      router.push(res.data.payment_url)
+    } else {
+      toast.error(res.message || 'Payment initiation failed')
+    }
   }
 
   return (
@@ -66,12 +104,12 @@ const BookingExtraKmsAndPayment = ({
 
               if (!price || Number(price) === 0) return null
 
-              const isSelected = selectedExtraKmId === srv.additional_charge_id
+              const isSelected = selectedExtraKmId === srv.rental_additional_charge_id
 
               return (
                 <div
-                  key={srv.additional_charge_id}
-                  onClick={() => handleExtraKmSelect(srv.additional_charge_id)}
+                  key={srv.rental_additional_charge_id}
+                  onClick={() => handleExtraKmSelect(srv.rental_additional_charge_id)}
                   className={classnames(
                     'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
                     isSelected
@@ -84,7 +122,9 @@ const BookingExtraKmsAndPayment = ({
                       type="radio"
                       name="extraKmOption"
                       checked={isSelected}
-                      onChange={() => handleExtraKmSelect(srv.additional_charge_id)}
+                      onChange={() =>
+                        handleExtraKmSelect(srv.rental_additional_charge_id)
+                      }
                       className="h-4 w-4 cursor-pointer accent-blue-600"
                     />
                     <span className="font-medium">{srv.title}</span>
@@ -113,6 +153,7 @@ const BookingExtraKmsAndPayment = ({
             orderId={orderId}
             currency={currency}
             totalAmount={selectedPrice}
+            onPaymentSubmit={handlePaymentSubmit}
           />
         </div>
       )}

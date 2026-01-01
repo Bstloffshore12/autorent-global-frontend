@@ -147,6 +147,7 @@ class NetworkModel {
 
     // order
     postOrder: `${this.adminIp}api/order/insert`,
+    extraKilometer: `${this.adminIp}api/customer/extra-kilometer`,
     booking: {
       getInvoice: (bookingId: string) =>
         `${this.adminIp}api/customer/getinvoice/${bookingId}`,

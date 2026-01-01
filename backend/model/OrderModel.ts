@@ -103,6 +103,24 @@ class OrderModel {
 
   static getOrderInvoice = async (orderId: string) =>
     NetworkModel.fetch(NetworkModel.apiRoutes.booking.getInvoice(orderId))
+
+  static postExtraKilometer = async (data: PostExtraKilometerProps) => {
+    const body = JSON.stringify(data)
+    return NetworkModel.fetch(NetworkModel.apiRoutes.extraKilometer, {
+      body,
+      method: 'POST',
+    })
+  }
+}
+
+export type PostExtraKilometerProps = {
+  order_id: string | number
+  rental_additional_charge_id: string | number
+  payment_id: string | number
+  kilometers?: number
+  amount?: string | number
+  title?: string
+  description?: string
 }
 
 export default OrderModel

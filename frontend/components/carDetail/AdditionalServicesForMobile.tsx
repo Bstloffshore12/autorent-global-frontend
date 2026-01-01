@@ -53,7 +53,9 @@ const AdditionalServicesFormMobile = ({
       officePickupLocation,
       officeDropoffLocation,
     },
+    operatingCountry: { activeId, list: operatingCountryList },
   } = useAppStore((state) => state)
+  const activeCountry = operatingCountryList.find((c: any) => c.id === activeId)
 
   const selectedIds = useMemo(() => addOns.map((z) => z.id), [addOns])
 
@@ -249,7 +251,7 @@ const AdditionalServicesFormMobile = ({
         </p>
       )}
       {/* EXTRA KM SECTION */}
-      {visibleExtraKmServices.length > 0 && (
+      {activeCountry?.extra_kilometer_service === 1 && visibleExtraKmServices.length > 0 && (
         <div className="mt-3">
           <p className="col-span-2 font-semibold text-gray-900">
             Extra Kilometers

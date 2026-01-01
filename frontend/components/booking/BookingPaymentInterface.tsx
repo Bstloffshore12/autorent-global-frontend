@@ -14,6 +14,7 @@ interface BookingPaymentInterfaceProps {
   orderId: string
   currency: string
   totalAmount: string
+  onPaymentSubmit?: (paymentId: number) => Promise<void>
 }
 
 const PaymentIcon = ({
@@ -73,6 +74,7 @@ const BookingPaymentInterface = ({
   orderId,
   currency,
   totalAmount,
+  onPaymentSubmit,
 }: BookingPaymentInterfaceProps) => {
   const router = useRouter()
   const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
@@ -88,6 +90,15 @@ const BookingPaymentInterface = ({
 
     setIsSubmitting(true)
     try {
+      // If a custom handler is provided, use it
+      if (onPaymentSubmit) {
+        await onPaymentSubmit(selectedPaymentId)
+        // The custom handler is expected to handle navigation or errors if needed,
+        // but we settle the loading state in finally block.
+        return
+      }
+
+      // Default behavior
       const res = await getPaymentUrlAction({
         orderId: orderId,
         paymentId: selectedPaymentId.toString(),
