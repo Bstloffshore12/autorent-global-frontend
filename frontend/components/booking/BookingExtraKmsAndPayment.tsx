@@ -72,13 +72,11 @@ const BookingExtraKmsAndPayment = ({
         : pricingMode === 'weekly'
           ? selectedKm.weekly
           : selectedKm.monthly
-    console.log({ selectedExtraKmId }, "selectedExtraKmId", { paymentId }, "paymentId", { orderId }, "orderId")
     const res = await getPaymentUrlExtraKmsAction({
       order_id: orderId,
       payment_id: paymentId,
       rental_additional_charge_id: selectedExtraKmId,
     })
-    console.log(JSON.parse(JSON.stringify(res)), "res snapshot");
 
     if (res.success) {
       router.push(res.data.payment_url)

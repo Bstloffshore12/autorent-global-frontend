@@ -96,6 +96,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             order={bookingData.order}
             basePrice={basePrices[bookingData.order.pricemode]}
             additionalCharges={bookingData.additional_charges}
+            extraKilometerCharges={bookingData.extra_kilometer_charges}
             location_dropoff_charge={bookingData.location_dropoff_charge}
           />
 
@@ -162,6 +163,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             <AdditionalServiceList
               currency={bookingData.order.currency}
               additionals={bookingData.additional_charges}
+              extraKilometerCharges={bookingData.extra_kilometer_charges}
               order={bookingData.order}
             />
             {bookingData.location_dropoff_charge && (
@@ -194,6 +196,7 @@ const BookingDetail = async ({ bookingData }: BookingDetailProps) => {
             order={bookingData.order}
             basePrice={basePrices[bookingData.order.pricemode]}
             additionalCharges={bookingData.additional_charges}
+            extraKilometerCharges={bookingData.extra_kilometer_charges}
             location_dropoff_charge={bookingData.location_dropoff_charge}
           />
 

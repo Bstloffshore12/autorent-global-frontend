@@ -232,6 +232,18 @@ export type BookingDetailData = {
     weekly: string
     monthly: string | null
   }[]
+  extra_kilometer_charges: {
+    id: number
+    title: string
+    description: string
+    service_type: string
+    amount: string
+    kilometers: string
+    price_per_km: string
+    media: null | any
+    added_by_manager: boolean
+    recorded_at: string
+  }[]
 }
 
 const {
