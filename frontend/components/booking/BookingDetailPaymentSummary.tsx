@@ -17,6 +17,7 @@ interface BookingDetailPaymentSummaryProps {
   basePrice: string
   order: BookingDetailData['order']
   additionalCharges: BookingDetailData['additional_charges']
+  extraKilometerCharges?: BookingDetailData['extra_kilometer_charges']
   location_dropoff_charge?: {
     title: string
     amount: string
@@ -28,6 +29,7 @@ const BookingDetailPaymentSummary = ({
   basePrice,
   className,
   additionalCharges,
+  extraKilometerCharges,
   location_dropoff_charge,
 }: BookingDetailPaymentSummaryProps) => {
   const t = useTranslations()
@@ -107,6 +109,24 @@ const BookingDetailPaymentSummary = ({
           ))}
         </div>
       )}
+
+      {extraKilometerCharges && !!extraKilometerCharges.length && (
+        <div className="mt-2 border-t border-dashed py-2">
+          <p className="mb-2 font-normal">{'Extra Kilometers Charges'}</p>
+          {extraKilometerCharges.map((charge) => (
+            <p
+              key={charge.id}
+              className="flex items-center justify-between rounded-md py-0.5 text-sm"
+            >
+              <span>{charge.title}</span>
+              <span>
+                {charge.amount} {order.currency}
+              </span>
+            </p>
+          ))}
+        </div>
+      )}
+
       {location_dropoff_charge && (
         <div className="py-2">
           <div className="flex items-center justify-between border-b border-dashed pb-1 text-sm">
