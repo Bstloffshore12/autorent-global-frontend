@@ -44,14 +44,7 @@ interface CarDetailPageProps {
 const CarDetailPage = async ({ params }: CarDetailPageProps) => {
   const { slug } = await params
 
-  const [
-    t,
-    getPaymentOptionsRes,
-    carDetailRes,
-    officeLocationsContentRes,
-    bookingMessageRes,
-    activeCountry, //active operating country
-  ] = await Promise.all([
+  const results = await Promise.allSettled([
     getTranslations(),
     getPaymentOptionsAction(),
     getCarDetailAction({ slug }),
@@ -59,6 +52,33 @@ const CarDetailPage = async ({ params }: CarDetailPageProps) => {
     getCustomContentAction('booking-content'),
     OperatingCountryModel.getActiveOperatingCountry(), // get active operating country to handle Global Pricing Modes
   ])
+
+  const [tRes, paymentRes, carRes, officeRes, bookingRes, countryRes] = results
+
+  const t = tRes.status === 'fulfilled' ? tRes.value : (key: string) => key
+
+  const getPaymentOptionsRes =
+    paymentRes.status === 'fulfilled'
+      ? paymentRes.value
+      : { success: false, data: [] }
+
+  const carDetailRes =
+    carRes.status === 'fulfilled'
+      ? carRes.value
+      : { success: false, data: null }
+
+  const officeLocationsContentRes =
+    officeRes.status === 'fulfilled'
+      ? officeRes.value
+      : { success: false, data: {} }
+
+  const bookingMessageRes =
+    bookingRes.status === 'fulfilled'
+      ? bookingRes.value
+      : { success: false, data: null }
+
+  const activeCountry =
+    countryRes.status === 'fulfilled' ? countryRes.value : null
 
   const bookingMessage =
     (bookingMessageRes.success && bookingMessageRes.data?.content) || ''

@@ -111,7 +111,7 @@ const BookingDetailPaymentSummary = ({
       )}
 
       {extraKilometerCharges && !!extraKilometerCharges.length && (
-        <div className="mt-2 py-2 border-t border-dashed">
+        <div className="mt-2 border-t border-dashed py-2">
           <p className="mb-2 font-normal">{'Extra Kilometers Charges'}</p>
           {extraKilometerCharges.map((charge) => (
             <p

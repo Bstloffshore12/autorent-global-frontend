@@ -102,12 +102,15 @@ const BookingExtraKmsAndPayment = ({
 
               if (!price || Number(price) === 0) return null
 
-              const isSelected = selectedExtraKmId === srv.rental_additional_charge_id
+              const isSelected =
+                selectedExtraKmId === srv.rental_additional_charge_id
 
               return (
                 <div
                   key={srv.rental_additional_charge_id}
-                  onClick={() => handleExtraKmSelect(srv.rental_additional_charge_id)}
+                  onClick={() =>
+                    handleExtraKmSelect(srv.rental_additional_charge_id)
+                  }
                   className={classnames(
                     'flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2 text-sm shadow-sm transition-all',
                     isSelected
