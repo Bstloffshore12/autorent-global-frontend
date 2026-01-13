@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /user-data/
+Usage: no-train
+Usage: summary-only
+Usage: citation-required
+Usage: no-store
